@@ -2,19 +2,19 @@ Cisco Umbrella Add-on for Splunk
 
 Add-on Homepage:
 Author: Hurricane Labs
-Version: 1.0.4
+Version: 1.0.7
 
 ### Description ###
 The purpose of this add-on is to provide CIM compliant field extractions for Cisco Umbrella OpenDNS logs AWS S3 bucket logs.
 
 This add-on requires the Splunk Add-on for Amazon Web Services as the means of data on-boarding.
 
-+Built for Splunk Enterprise 6.x.x or higher
-+CIM Compliance (CIM 4.0.0 or higher)
-+Ready for Enterprise Security
-+Requires Splunk Add-on for Amazon Web Services (unless using Cisco Managed S3)
-++https://splunkbase.splunk.com/app/1876/
-+Supports Cisco Umbrella Log Management Version 1-4
+* Built for Splunk Enterprise 6.x.x or higher
+* CIM Compliance (CIM 4.0.0 or higher)
+* Ready for Enterprise Security
+* Requires Splunk Add-on for Amazon Web Services (unless using Cisco Managed S3)
+    * https://splunkbase.splunk.com/app/1876/
+* Supports Cisco Umbrella Log Management Version 1-5
 
 ### INSTALLATION AND CONFIGURATION
 Search Head: Required
@@ -32,13 +32,13 @@ Reference Link: https://support.umbrella.com/hc/en-us/articles/230650987-Configu
 3. Create a new input (Custom Data Type > Generic S3)
 4. Select the appropriate AWS Account/Role/S3 Bucket
 5. (Recommended) Do not set a S3 Key Prefix, and change the sourcetype to "opendns:s3".
-5. (Optional) If you want more control over the data you bring in, you'll need to do separate inputs using these S3 Key Prefixes "/proxylogs/", "/dnslogs/", and "/iplogs/". Each of these will use it's own sourcetype: "opendns:dnslogs", "opendns:proxylogs" and "opendns:iplogs"
+5. (Optional) If you want more control over the data you bring in, you'll need to do separate inputs using these S3 Key Prefixes "/proxylogs/", "/dnslogs/", "/firewalllogs/", "/auditlogs/" and "/iplogs/". Each of these will use it's own sourcetype: "opendns:dnslogs", "opendns:proxylogs", "opendns:firewalllogs", "opendns:auditlogs", and "opendns:iplogs"
 
 #### Heavy Forwarder & Search Head (RECOMMENDED)
 1. Install the add-on on the Heavy Forwarder and Search Head. A Splunk Restart may be required, you may also attempt a debug refresh.
 2. Configure the AWS Input to scrape your OpenDNS S3 bucket;
 2a. One Input: If you scrape the entire bucket, you NEED to use sourcetype "opendns:s3"
-2b. Multiple Inputs: If you want more control over the buckets being scraped, this add-on supports multiple inputs. There are three types of logs sent by Umbrella OpenDNS; "/proxylogs/", "/dnslogs/", and "/iplogs/". Each input should use exactly one of those prefixes. The respective sourcetypes for those prefixes are as follows; "opendns:dnslogs", "opendns:proxy" and "opendns:iplogs".
+2b. Multiple Inputs: If you want more control over the buckets being scraped, this add-on supports multiple inputs. There are three types of logs sent by Umbrella OpenDNS; "/proxylogs/", "/dnslogs/", "/firewalllogs/", "/auditlogs/" and "/iplogs/". Each input should use exactly one of those prefixes. The respective sourcetypes for those prefixes are as follows; "opendns:dnslogs", "opendns:proxy", "opendns:firewalllogs", "opendns:auditlogs" and "opendns:iplogs".
 3. Verify data is coming in and you are seeing the proper field extractions by searching the data.
 + Example Search: index=awsindexyouchose sourcetype=opendns:\* | dedup sourcetype
 
@@ -46,7 +46,7 @@ Reference Link: https://support.umbrella.com/hc/en-us/articles/230650987-Configu
 1. Install the add-on on the Search Head. A Splunk Restart may be required, you may also attempt a debug refresh.
 2. Configure the AWS Input to scrape your OpenDNS S3 bucket;
 2a. One Input: If you scrape the entire bucket, you NEED to use sourcetype "opendns:s3"
-2b. Multiple Inputs: If you want more control over the buckets being scraped, this add-on supports multiple inputs. There are three types of logs sent by Umbrella OpenDNS; "/proxylogs/", "/dnslogs/", and "/iplogs/". Each input should use exactly one of those prefixes. The respective sourcetypes for those prefixes are as follows; "opendns:dnslogs", "opendns:proxy" and "opendns:iplogs".
+2b. Multiple Inputs: If you want more control over the buckets being scraped, this add-on supports multiple inputs. There are three types of logs sent by Umbrella OpenDNS; "/proxylogs/", "/dnslogs/", "/firewalllogs/", "/auditlogs/" and "/iplogs/". Each input should use exactly one of those prefixes. The respective sourcetypes for those prefixes are as follows; "opendns:dnslogs", "opendns:proxy", "opendns:firewalllogs", "opendns:auditlogs" and "opendns:iplogs".
 3. Verify data is coming in and you are seeing the proper field extractions by searching the data.
 + Example Search: index=awsindexyouchose sourcetype=opendns:\* | dedup sourcetype
 
@@ -54,7 +54,7 @@ Reference Link: https://support.umbrella.com/hc/en-us/articles/230650987-Configu
 1. Install the add-on on the Indexer and Search Head. A Splunk Restart may be required, you may also attempt a debug refresh.
 2. Configure the AWS Input to scrape your OpenDNS S3 bucket;
 2a. One Input: If you scrape the entire bucket, you NEED to use sourcetype "opendns:s3"
-2b. Multiple Inputs: If you want more control over the buckets being scraped, this add-on supports multiple inputs. There are three types of logs sent by Umbrella OpenDNS; "/proxylogs/", "/dnslogs/", and "/iplogs/". Each input should use exactly one of those prefixes. The respective sourcetypes for those prefixes are as follows; "opendns:dnslogs", "opendns:proxy" and "opendns:iplogs".
+2b. Multiple Inputs: If you want more control over the buckets being scraped, this add-on supports multiple inputs. There are three types of logs sent by Umbrella OpenDNS; "/proxylogs/", "/dnslogs/", "/firewalllogs/", "/auditlogs/" and "/iplogs/". Each input should use exactly one of those prefixes. The respective sourcetypes for those prefixes are as follows; "opendns:dnslogs", "opendns:proxy", "opendns:firewalllogs", "opendns:auditlogs" and "opendns:iplogs".
 3. Verify data is coming in and you are seeing the proper field extractions by searching the data.
 + Example Search: index=awsindexyouchose sourcetype=opendns:\* | dedup sourcetype
 
@@ -129,6 +129,9 @@ sourcetype = opendns:dnslogs
 
 ### New features
 + 1.0.3: Added support for Cisco Managed Bucket
++ 1.0.5: Adds support for logging format version 5 + Firewall Logs
++ 1.0.6: Adds support for Audit Logs
++ 1.0.7: Added additional CIM fields for OpenDNS: query_type, message_type
 
 ### Fixed issues
 + 1.0.1: Added timezone setting as logs are requested in UTC by default.
@@ -137,6 +140,7 @@ sourcetype = opendns:dnslogs
 + 1.0.4: Fixes an issue in the README under delete-old-umbrella-logs.sh
 
 ### Known issues
++ No support for log format version 6 that adds new Proxy Log fields for SWG/DLP modules. If you have these logs please send us (see Dev Support email) some samples and we will add support to this TA.
 
 ### Third-party software attributions
 + opendns_dnslogs_categories.csv from https://api.opendns.com/v3/categories
