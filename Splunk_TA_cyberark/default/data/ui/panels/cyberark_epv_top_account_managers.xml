@@ -1,0 +1,10 @@
+<panel>
+  <title>CyberArk EPV - Top 10 Account Managers in Last 24H</title>
+  <table>
+	<search>
+	  <query>eventtype=cyberark_epv_change_analysis_account earliest=-24h | top src_user showperc=f | rename src_user as "Source User", count as "Count"</query>
+	  <earliest></earliest>
+	  <latest></latest>
+	</search>
+  </table>
+</panel>
