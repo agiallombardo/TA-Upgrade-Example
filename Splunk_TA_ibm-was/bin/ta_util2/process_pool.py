@@ -1,8 +1,12 @@
+#
+# SPDX-FileCopyrightText: 2021 Splunk, Inc. <sales@splunk.com>
+# SPDX-License-Identifier: LicenseRef-Splunk-8-2021
+#
+#
 """
 A wrapper of multiprocessing.pool
 """
 
-from builtins import object
 import multiprocessing
 import logging
 
@@ -12,7 +16,7 @@ import ta_util2.log_files as log_files
 _LOGGER = logging.getLogger(log_files.ta_util)
 
 
-class ProcessPool(object):
+class ProcessPool:
     """
     A simple wrapper of multiprocessing.pool
     """

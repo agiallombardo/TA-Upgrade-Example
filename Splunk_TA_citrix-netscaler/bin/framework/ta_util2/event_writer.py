@@ -1,23 +1,21 @@
 ##
-## SPDX-FileCopyrightText: 2020 Splunk, Inc. <sales@splunk.com>
+## SPDX-FileCopyrightText: 2021 Splunk, Inc. <sales@splunk.com>
 ## SPDX-License-Identifier: LicenseRef-Splunk-1-2020
 ##
 ##
 
-from future import standard_library
-standard_library.install_aliases()
-from builtins import object
 import queue
 import threading
 import sys
 import logging
+import traceback
 
 import ta_util2.log_files as log_files
 
 _LOGGER = logging.getLogger(log_files.ta_util)
 
 
-class EventWriter(object):
+class EventWriter:
 
     def __init__(self):
         self._event_queue = queue.Queue()
@@ -54,7 +52,12 @@ class EventWriter(object):
         while 1:
             event = event_queue.get()
             if event is not None:
-                write(event)
+                try:
+                    write(event)
+                except UnicodeEncodeError:
+                    _LOGGER.critical("Events are not ingested. Possible cause could be a mismatch of event character set with system-defined character set.")
+                except Exception:
+                    _LOGGER.critical("Faced an unknown error while writing events. Traceback: %s", traceback.format_exc())
                 flush()
             else:
                 break

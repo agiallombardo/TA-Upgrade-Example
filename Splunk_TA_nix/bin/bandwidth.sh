@@ -2,6 +2,7 @@
 # SPDX-FileCopyrightText: 2021 Splunk, Inc. <sales@splunk.com>
 # SPDX-License-Identifier: Apache-2.0
 
+# jscpd:ignore-start
 . `dirname $0`/common.sh
 
 HEADER='Name    rxPackets_PS txPackets_PS rxKB_PS txKB_PS'
@@ -14,7 +15,7 @@ if [ "x$KERNEL" = "xLinux" ] ; then
     FILTER='($0 !~ "Average" || $0 ~ "sar" || $2 ~ "lo|IFACE") {next}'
     FORMAT='{Name=$2; rxPackets_PS=$3; txPackets_PS=$4; rxKB_PS=$5; txKB_PS=$6}'
 elif [ "x$KERNEL" = "xSunOS" ] ; then
-    if $SOLARIS_10 = "true" ; then
+    if [ $SOLARIS_10 = "true" ] ; then
         CMD='netstat -i 1 2'
         FILTER='(NR==2||NR==3){next}'
         EXTRACT_NAME='NR==1 {for (i=0; i< NF/3 -1; i++) { name[i]=$(i*3 + 2); location[name[i]]=i }}'
@@ -22,7 +23,7 @@ elif [ "x$KERNEL" = "xSunOS" ] ; then
         PRINTF=''
         FORMAT="$EXTRACT_NAME $EXTRACT_FIELDS"
 
-    elif $SOLARIS_11 = "true" ; then
+    elif [ $SOLARIS_11 = "true" ] ; then
         dlstat 1 1 > /dev/null 2>&1
 		if [ $? -ne 0 ] ; then
 			CMD='netstat -i 1 2'
@@ -71,3 +72,4 @@ fi
 assertHaveCommand $CMD
 $CMD | tee $TEE_DEST | $AWK "$HEADERIZE $FILTER $FORMAT $PRINTF"  header="$HEADER"
 echo "Cmd = [$CMD];  | $AWK '$HEADERIZE $FILTER $FORMAT $PRINTF' header=\"$HEADER\"" >> $TEE_DEST
+# jscpd:ignore-end

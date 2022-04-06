@@ -1,5 +1,9 @@
-from builtins import object
-class JobSource(object):
+#
+# SPDX-FileCopyrightText: 2021 Splunk, Inc. <sales@splunk.com>
+# SPDX-License-Identifier: LicenseRef-Splunk-8-2021
+#
+#
+class JobSource:
 
     def start(self):
         pass

@@ -1,5 +1,8 @@
-from __future__ import print_function
-from builtins import next
+#
+# SPDX-FileCopyrightText: 2021 Splunk, Inc. <sales@splunk.com>
+# SPDX-License-Identifier: LicenseRef-Splunk-8-2021
+#
+#
 import logging
 import os.path as op
 import os
@@ -90,21 +93,35 @@ def discover_log_viewer_cmds(config):
 
     excluded_profiles = config[c.excluded_profiles]
     if excluded_profiles:
-        excluded_profiles = excluded_profiles.split(",")
+        excluded_profiles = [excluded_profile.strip() for excluded_profile in excluded_profiles.split(",")]
     else:
         excluded_profiles = []
 
     for profile in profiles:
-        for excluded in excluded_profiles:
-            if re.match("^" + excluded.strip() + "$", profile):
-                _LOGGER.info("Exclude profile=%s from HPEL data collection",
-                             profile)
-                break
-        else:
-            cmd_w_path = op.join(root, profile, "bin", log_viewer)
-            if op.exists(cmd_w_path):
-                cmds.append(cmd_w_path)
+        if profile in excluded_profiles:
+            _LOGGER.info("Exclude profile=%s from HPEL data collection",
+                            profile)
+            continue
+        
+        cmd_w_path = op.join(root, profile, "bin", log_viewer)
+        if op.exists(cmd_w_path):
+            # traverse the profile's directory to find servers
+            profile_root, servers, _ = next(os.walk(os.path.join(profile_dir,profile,"servers")))
+            _LOGGER.info("Detected following list of servers under profile {} : {}".format(profile, servers))
+            excluded_servers = config[c.excluded_servers]
+            if excluded_servers:
+                excluded_servers = [excluded_server.strip() for excluded_server in excluded_servers.split(",")]
             else:
-                _LOGGER.info("Doesn't find logViewer command for profile=%s",
-                             profile)
+                excluded_servers = []
+            
+            for server in servers:
+                if profile + ":" + server in excluded_servers:
+                    _LOGGER.info("Excluding server \"{}\" of profile \"{}\" for HPEL data collection.".format(server, profile))
+                    continue
+                server_repo_path = os.path.join(profile_dir,profile,"logs",server)
+                if op.exists(server_repo_path):
+                    cmds.append((cmd_w_path, server_repo_path, server))
+        else:
+            _LOGGER.info("Didn't find logViewer command for profile=%s",
+                            profile)
     return cmds

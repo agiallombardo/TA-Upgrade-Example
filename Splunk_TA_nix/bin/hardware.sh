@@ -42,7 +42,7 @@ elif [ "x$KERNEL" = "xSunOS" ] ; then
 	assertHaveCommandGivenPath /usr/sbin/swap
 	# CPUs and NIC count
 	if [ -x /usr/sbin/prtdiag ] ; then
-		if $SOLARIS_10 = "true" || $SOLARIS_11 = "true" ; then
+		if [ $SOLARIS_10 = "true" ] || [ $SOLARIS_11 = "true" ] ; then
 			CPU_TYPE=`/usr/sbin/prtdiag | $AWK 'BEGIN {leftToSkip=-1} /Processor Sockets/ {leftToSkip=3; next} (leftToSkip>0) {leftToSkip-=1; next} (!leftToSkip) {sub("[0-9]$", "", $0); sub(" CPU socket #$", "", $0); print $0; exit}'`
 		else
 			CPU_TYPE=`/usr/sbin/prtdiag | $AWK 'BEGIN {leftToSkip=-1} /Processor Sockets/ {leftToSkip=3; next} (leftToSkip>0) {leftToSkip-=1; next} (!leftToSkip) {sub("[0-9]$", "", $0); sub(" [A-Za-z]+ ?$", "", $0); print $0; exit}'`
@@ -88,7 +88,7 @@ elif [ "x$KERNEL" = "xAIX" ] ; then
 		HARD_INFO=`/usr/sbin/lscfg -vpl $disk | $AWK -F . '/Manufacturer/ {name = $NF } /Machine Type and Model/ {info = $(NF)} END {printf("%s %s", name, info)}'`
 		HARD_MB=`/usr/sbin/lspv -L $disk | awk -F \( '{print $2}'| awk '/VG DESCRIPTORS/{print $1" MB"}'`
                 HARD_DRIVES=$HARD_DRIVES$disk" "$HARD_INFO" "$HARD_MB"; "
-        done  
+        done
 	# NICs
 	NIC_TYPE=`/usr/sbin/lsdev -Cc adapter | grep ent | awk -F"    " '{print $1" "$3"; "}'`
 	NIC_COUNT=`/usr/sbin/lsdev -Cc adapter | grep -c ent`
@@ -143,7 +143,7 @@ elif [ "x$KERNEL" = "xFreeBSD" ] ; then
 	HARD_DRIVES=`df -h | awk '/^\/dev/ {sub("^.*\134/", "", $1); drives[$1] = $2} END {for(d in drives) printf("%s: %s; ", d, drives[d])}'`
 	# NICs
 	IFACE_NAME=`ifconfig -a | awk '!/^[a-z]/ {next} /LOOPBACK/ {next} {print $1}' | head -1`
-	NIC_TYPE=`dmesg | awk '(index($0, iface) && index($0, " port ")) {sub("^.*<", ""); sub(">.*$", ""); print $0}' iface=$IFACE_NAME`
+	NIC_TYPE=`dmesg | awk '(index($0, iface) && index($0, " port ")) {sub("^.*<", ""); sub(">.*$", ""); print $0}' iface=$IFACE_NAME | head -1`
 	NIC_COUNT=`ifconfig -a | grep -c media`
 	# memory
 	MEMORY_REAL=`sysctl hw.physmem | awk '{print $2/(1024*1024) "MB"}'`
@@ -156,11 +156,11 @@ formatAndPrint ()
 }
 
 formatAndPrint "KEY           VALUE"
-formatAndPrint "CPU_TYPE      $CPU_TYPE" 
-formatAndPrint "CPU_CACHE     $CPU_CACHE" 
-formatAndPrint "CPU_COUNT     $CPU_COUNT" 
+formatAndPrint "CPU_TYPE      $CPU_TYPE"
+formatAndPrint "CPU_CACHE     $CPU_CACHE"
+formatAndPrint "CPU_COUNT     $CPU_COUNT"
 formatAndPrint "HARD_DRIVES   $HARD_DRIVES"
 formatAndPrint "NIC_TYPE      $NIC_TYPE"
 formatAndPrint "NIC_COUNT     $NIC_COUNT"
-formatAndPrint "MEMORY_REAL   $MEMORY_REAL" 
-formatAndPrint "MEMORY_SWAP   $MEMORY_SWAP" 
+formatAndPrint "MEMORY_REAL   $MEMORY_REAL"
+formatAndPrint "MEMORY_SWAP   $MEMORY_SWAP"

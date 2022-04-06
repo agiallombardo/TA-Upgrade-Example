@@ -1,4 +1,8 @@
-from builtins import object
+#
+# SPDX-FileCopyrightText: 2021 Splunk, Inc. <sales@splunk.com>
+# SPDX-License-Identifier: LicenseRef-Splunk-8-2021
+#
+#
 import os.path as op
 import traceback
 import logging
@@ -8,7 +12,7 @@ import ta_util2.log_files as log_files
 _LOGGER = logging.getLogger(log_files.ta_util)
 
 
-class FileMonitor(object):
+class FileMonitor:
 
     def __init__(self, callback):
         self._callback = callback

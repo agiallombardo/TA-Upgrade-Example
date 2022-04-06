@@ -1,9 +1,11 @@
+#
+# SPDX-FileCopyrightText: 2021 Splunk, Inc. <sales@splunk.com>
+# SPDX-License-Identifier: LicenseRef-Splunk-8-2021
+#
+#
 """
 Popen with timed out in Python 2.7
 """
-from __future__ import absolute_import
-
-from builtins import object
 from subprocess import Popen, PIPE
 import time
 
@@ -15,7 +17,7 @@ def _do_read_proc_output(sub):
     return [stdout, stderr, False]
 
 
-class _TerminateCall(object):
+class _TerminateCall:
     def __init__(self, sub):
         self._sub = sub
         self.timed_out = False
@@ -40,7 +42,8 @@ def _do_timed_popen(args, timeout, cwd):
     from . import data_loader
     loader = data_loader.GlobalDataLoader.get_data_loader(None, None, None)
 
-    sub = Popen(args, stdout=PIPE, stderr=PIPE, cwd=cwd)
+    # semgrep ignore reason: not used in TA as of this commit. If used in future make sure it is not controllable by an external resource
+    sub = Popen(args, stdout=PIPE, stderr=PIPE, cwd=cwd) # nosemgrep: python.lang.security.audit.dangerous-subprocess-use.dangerous-subprocess-use
     terminate = _TerminateCall(sub)
     timer = loader.add_timer(terminate, time.time() + timeout, 0)
     ret = _do_read_proc_output(sub)
@@ -56,5 +59,6 @@ def timed_popen(args, timeout=-1, cwd=None):
     if timeout > 0:
         return _do_timed_popen(args, timeout, cwd)
     else:
-        sub = Popen(args, stdout=PIPE, stderr=PIPE, cwd=cwd)
+        # semgrep ignore reason: not used in TA as of this commit. If used in future make sure it is not controllable by an external resource
+        sub = Popen(args, stdout=PIPE, stderr=PIPE, cwd=cwd) # nosemgrep: python.lang.security.audit.dangerous-subprocess-use.dangerous-subprocess-use
         return _do_read_proc_output(sub)

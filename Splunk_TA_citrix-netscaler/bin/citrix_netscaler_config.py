@@ -1,10 +1,9 @@
 #
-# SPDX-FileCopyrightText: 2020 Splunk, Inc. <sales@splunk.com>
+# SPDX-FileCopyrightText: 2021 Splunk, Inc. <sales@splunk.com>
 # SPDX-License-Identifier: LicenseRef-Splunk-1-2020
 #
 #
 
-from builtins import object
 import os.path as op
 import sys
 import logging
@@ -32,7 +31,7 @@ class CitrixNetscalerConfMonitor(fm.FileMonitor):
                 CitrixNetscalerConfig.signal_file_w_path)
 
 
-class CitrixNetscalerConfig(object):
+class CitrixNetscalerConfig:
 
     app_dir = op.dirname(op.dirname(op.abspath(__file__)))
     app_file = op.join(app_dir, "local", "app.conf")

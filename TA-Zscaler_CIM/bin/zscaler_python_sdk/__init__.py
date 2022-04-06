@@ -38,12 +38,16 @@ class zscaler(Session, Auth, Locations, VpnCredentials, User, Security, Ssl, Act
 
 	def __init__(self):
 
+		self.session = requests.Session()
+		
+
+		# Set Proxies for Reqests 
+		#"http”: "http://1.2.3.4:8000”="",
+ 		#"https”: "http://1.2.3.4:8000",
 		self.proxies = {
 			"http": "",
- 			"https": ""
+ 			"https": "",
 		}
-		
-		self.session = requests.Session()
 
 		self.user_agent = 'ZscalerSDK/%s Python/%s %s/%s' % (
 			__version__,

@@ -13,8 +13,8 @@ PRINTF='{printf "%-10s  %11s  %11s  %12s  %12s  %13s  %13s  %13s\n", device, rRe
 if [ "x$KERNEL" = "xLinux" ] ; then
 	CMD='iostat -xk 1 2'
 	assertHaveCommand $CMD
-	FILTER='/^$/ {next} /^Device/ {for (i = 1; i <= NF; i++) {if ($i == "svctm") { svctm=i; } else if ($i == "%util") {putil=i;} } reportOrd++; next} (reportOrd<2) {next}'
-	FORMAT='{device=$1; rReq_PS=$4; wReq_PS=$5; rKB_PS=$6; wKB_PS=$7; avgQueueSZ=$9; avgWaitMillis=$10; avgSvcMillis=$svctm; bandwUtilPct=$putil}'
+	FILTER='/^$/ {next} /^Device/ {for (i = 1; i <= NF; i++) {if ($i == "svctm") { svctm=i; } else if ($i == "%util") {putil=i;} else if ($i == "r/s") {idx_rReq_PS=i;} else if ($i == "w/s") {idx_wReq_PS=i;} else if ($i == "rkB/s") {idx_rKB_PS=i;} else if ($i == "wkB/s") {idx_wKB_PS=i;} else if ($i == "avgqu-sz" || $i == "aqu-sz") {idx_avgQueueSZ=i;} else if ($i == "await") {await=i;}} reportOrd++; next} (reportOrd<2) {next}'
+	FORMAT='{device=$1; rReq_PS=$idx_rReq_PS; wReq_PS=$idx_wReq_PS; rKB_PS=$idx_rKB_PS; wKB_PS=$idx_wKB_PS; avgQueueSZ=$idx_avgQueueSZ; if(await==""){avgWaitMillis="?";} else {avgWaitMillis=$await;}; if(svctm==""){avgSvcMillis="?";} else {avgSvcMillis=$svctm;}; bandwUtilPct=$putil}'
 	HEADER='Device          rReq_PS      wReq_PS        rKB_PS        wKB_PS       avgQueueSZ   avgWaitMillis   avgSvcMillis   bandwUtilPct'
 	HEADERIZE="BEGIN {print \"$HEADER\"}"
 	PRINTF='{printf "%-10s  %11s  %11s  %12s  %12s  %13s  %13s  %13s  %13s\n", device, rReq_PS, wReq_PS, rKB_PS, wKB_PS, avgQueueSZ, avgWaitMillis, avgSvcMillis, bandwUtilPct}'

@@ -1,11 +1,11 @@
 ##
-## SPDX-FileCopyrightText: 2020 Splunk, Inc. <sales@splunk.com>
+## SPDX-FileCopyrightText: 2021 Splunk, Inc. <sales@splunk.com>
 ## SPDX-License-Identifier: LicenseRef-Splunk-1-2020
 ##
 ##
 
 import re
-from xml.etree import cElementTree as et
+from defusedxml import ElementTree as et
 
 
 def parse_conf_xml_dom(xml_content):

@@ -1,4 +1,8 @@
-from builtins import str
+#
+# SPDX-FileCopyrightText: 2021 Splunk, Inc. <sales@splunk.com>
+# SPDX-License-Identifier: LicenseRef-Splunk-8-2021
+#
+#
 import datetime
 import os
 import os.path as op
@@ -72,7 +76,7 @@ def setup_logging(log_name, level_name="INFO", refresh=False):
         file_handler = handlers.RotatingFileHandler(logfile, mode="a",
                                                     maxBytes=104857600,
                                                     backupCount=5)
-        fmt_str = "%(asctime)s %(levelname)s %(thread)d - %(message)s"
+        fmt_str = "%(asctime)s %(levelname)s pid=%(process)d tid=%(thread)d file=%(filename)s:%(funcName)s:%(lineno)d | %(message)s"
         formatter = logging.Formatter(fmt_str)
         file_handler.setFormatter(formatter)
         logger.addHandler(file_handler)

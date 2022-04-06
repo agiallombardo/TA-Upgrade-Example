@@ -1,4 +1,8 @@
-from builtins import object
+#
+# SPDX-FileCopyrightText: 2021 Splunk, Inc. <sales@splunk.com>
+# SPDX-License-Identifier: LicenseRef-Splunk-8-2021
+#
+#
 import threading
 from time import time
 import random
@@ -10,12 +14,12 @@ import ta_util2.log_files as log_files
 _LOGGER = logging.getLogger(log_files.ta_util)
 
 
-class Scheduler(object):
+class Scheduler:
     """
     A simple scheduler which schedules the periodic or once event
     """
 
-    import ta_util2.sortedcontainers as sc
+    import sortedcontainers as sc
 
     max_delay_time = 60
 

@@ -1,5 +1,5 @@
 #
-# SPDX-FileCopyrightText: 2020 Splunk, Inc. <sales@splunk.com>
+# SPDX-FileCopyrightText: 2021 Splunk, Inc. <sales@splunk.com>
 # SPDX-License-Identifier: LicenseRef-Splunk-1-2020
 #
 #
@@ -85,7 +85,7 @@ class CitrixTemplateExternalHandler(AdminExternalHandler):
         for input, input_info in list(input_objs_dict.items()):
             # Skip the default input stanza
             if input != "citrix_netscaler":
-                templates = input_info["templates"]
+                templates = input_info.get("templates") or ""
                 # If the use of the given template found in inputs then raise the error
                 if template_name in templates.split("|"):
                     raise RestError(405, "\"{}\" cannot be deleted because it is in use.".format(template_name))

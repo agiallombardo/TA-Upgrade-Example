@@ -1,6 +1,6 @@
 #!/usr/bin/python
 #
-# SPDX-FileCopyrightText: 2020 Splunk, Inc. <sales@splunk.com>
+# SPDX-FileCopyrightText: 2021 Splunk, Inc. <sales@splunk.com>
 # SPDX-License-Identifier: LicenseRef-Splunk-1-2020
 #
 #
@@ -9,9 +9,6 @@
 This is the main entry point for Citrix NetScaler TA
 """
 import import_declare_test
-from future import standard_library
-
-standard_library.install_aliases()
 import time
 import sys
 import traceback
@@ -102,6 +99,22 @@ def _get_ucs_configs(meta_configs, inputs):
 
     return tasks
 
+def proxy_port_value_validation(value):
+    """
+    This function returns False if proxy port has unsupported value. Otherwise, it returns true.
+    """
+    try:
+        proxy_port_value=int(value)
+        if proxy_port_value <=0 or proxy_port_value > 65535 :
+            _LOGGER.error("Field Proxy Port should be within the range of [1 and 65535]")
+            return False
+    except ValueError:
+        _LOGGER.error("Invalid Proxy Port value in splunk_ta_citrix_netscaler_settings.conf file. To start data collection please provide valid proxy port value.")
+        return False
+    except TypeError:
+        _LOGGER.error("No Proxy Port value in splunk_ta_citrix_netscaler_settings.conf file. To start data collection please provide valid proxy port value.")
+        return False
+    return True
 
 class ModinputJobSource(js.JobSource):
     def __init__(self, tasks):
@@ -209,6 +222,12 @@ class CitrixNetscaler(smi.Script):
             sys.exit(0)
 
         for task in tasks:
+            # Validate the proxy port value
+            proxy_enabled = task.get("proxy_enabled") or "0"
+            proxy_port_value = task.get("proxy_port", 0)
+            if utils.is_true(proxy_enabled) and proxy_port_value and not proxy_port_value_validation(proxy_port_value):
+                return
+
             # Validate http_scheme is valid, i.e. http or https
             http_scheme = task["http_scheme"]
             _LOGGER.debug(
@@ -238,6 +257,19 @@ class CitrixNetscaler(smi.Script):
                 "Format of Citrix Netscaler host %s, successfully validated",
                 host,
             )
+
+            # Validate duration field value is valid
+            if not (isinstance(task.get("duration"), int) and 1 <= task.get("duration", 0) <= 31536000):
+                 _LOGGER.warn(
+                     "Got unexpected value {} of 'duration' field for input '{}' while collecting data of api endpoint '{}'. "
+                     "Duration should be an integer and within the range of 1 to 31536000. Setting the default value. "
+                     "You can either change it in inputs.conf file or edit 'Collection interval' on Inputs page.".format(
+                        task.get("duration"),
+                        task.get("name").replace("citrix_netscaler://", ""),
+                        task.get("api_endpoint"))
+                    )
+
+                 task["duration"] = 3600
 
         writer = event_writer.EventWriter()
         job_src = ModinputJobSource(tasks)

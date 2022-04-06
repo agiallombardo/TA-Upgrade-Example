@@ -1,7 +1,10 @@
-from future import standard_library
-standard_library.install_aliases()
+#
+# SPDX-FileCopyrightText: 2021 Splunk, Inc. <sales@splunk.com>
+# SPDX-License-Identifier: LicenseRef-Splunk-8-2021
+#
+#
 from io import StringIO
-import xml.etree.cElementTree as ElementTree
+from defusedxml import ElementTree
 
 
 def _do_handlers(evt, elem, current_path, path_handlers):

@@ -1,8 +1,11 @@
-from builtins import range
-from builtins import object
+#
+# SPDX-FileCopyrightText: 2021 Splunk, Inc. <sales@splunk.com>
+# SPDX-License-Identifier: LicenseRef-Splunk-8-2021
+#
+#
 import re
 import json
-from xml.etree import cElementTree as et
+from defusedxml import ElementTree as et
 
 import ta_util2.rest as rest
 
@@ -19,7 +22,7 @@ class KVNotExists(KVException):
     pass
 
 
-class KVClient(object):
+class KVClient:
 
     def __init__(self, splunkd_host, session_key):
         self._splunkd_host = splunkd_host

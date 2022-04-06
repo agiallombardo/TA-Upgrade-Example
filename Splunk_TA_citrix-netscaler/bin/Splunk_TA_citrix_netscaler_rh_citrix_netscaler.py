@@ -1,5 +1,5 @@
 #
-# SPDX-FileCopyrightText: 2020 Splunk, Inc. <sales@splunk.com>
+# SPDX-FileCopyrightText: 2021 Splunk, Inc. <sales@splunk.com>
 # SPDX-License-Identifier: LicenseRef-Splunk-1-2020
 #
 #
@@ -46,8 +46,10 @@ fields = [
         required=True,
         encrypted=False,
         default='3600',
-        validator=validator.Pattern(
-            regex=r"""^\-[1-9]\d*$|^\d*$""", 
+        validator=validator.Number(
+            min_val=1,
+            max_val=31536000,
+            is_int=True
         )
     ), 
     field.RestField(

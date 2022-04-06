@@ -1,4 +1,8 @@
-# Global
+#
+# SPDX-FileCopyrightText: 2021 Splunk, Inc. <sales@splunk.com>
+# SPDX-License-Identifier: LicenseRef-Splunk-8-2021
+#
+#
 session_key = "session_key"
 server_uri = "server_uri"
 checkpoint_dir = "checkpoint_dir"
@@ -35,7 +39,10 @@ level = "level"
 min_level = "min_level"
 max_level = "max_level"
 excluded_profiles = "excluded_profiles"
+excluded_servers = "excluded_servers"
 
 # Other
 log_viewer = "log_viewer"
+repository_dir = "repository_dir"
 meta = "meta"
+server = "server"

@@ -1,5 +1,5 @@
 #
-# SPDX-FileCopyrightText: 2020 Splunk, Inc. <sales@splunk.com>
+# SPDX-FileCopyrightText: 2021 Splunk, Inc. <sales@splunk.com>
 # SPDX-License-Identifier: LicenseRef-Splunk-1-2020
 #
 #
@@ -52,7 +52,8 @@ fields_proxy = [
         default=None,
         validator=validator.Number(
             max_val=65535, 
-            min_val=1, 
+            min_val=1,
+            is_int=True
         )
     ), 
     field.RestField(

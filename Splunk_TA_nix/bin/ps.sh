@@ -6,7 +6,6 @@
 
 HEADER='USER               PID   PSR   pctCPU       CPUTIME  pctMEM     RSZ_KB     VSZ_KB   TTY      S       ELAPSED  COMMAND             ARGS'
 FORMAT='{sub("^_", "", $1); if (NF>12) {args=$13; for (j=14; j<=NF; j++) args = args "_" $j} else args="<noArgs>"; sub("^[^\134[: -]*/", "", $12)}'
-NORMALIZE='(NR>1) {if ($4<0 || $4>100) $4=0; if ($6<0 || $6>100) $6=0}'
 PRINTF='{if (NR == 1) {print $0} else {printf "%32.32s  %6s  %4s   %6s  %12s  %6s   %8s   %8s   %-7.7s  %1.1s  %12s  %-100.100s  %s\n", $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, args}}'
 
 HEADERIZE='{NR == 1 && $0 = header}'
@@ -44,5 +43,5 @@ elif [ "x$KERNEL" = "xFreeBSD" ] ; then
 	fi
 fi
 
-$CMD | tee $TEE_DEST | $AWK "$HEADERIZE $FILL_BLANKS $FORMAT $NORMALIZE $PRINTF"  header="$HEADER"
-echo "Cmd = [$CMD];  | $AWK '$HEADERIZE $FILL_BLANKS $FORMAT $NORMALIZE $PRINTF' header=\"$HEADER\"" >> $TEE_DEST
+$CMD | tee $TEE_DEST | $AWK "$HEADERIZE $FILL_BLANKS $FORMAT $PRINTF"  header="$HEADER"
+echo "Cmd = [$CMD];  | $AWK '$HEADERIZE $FILL_BLANKS $FORMAT $PRINTF' header=\"$HEADER\"" >> $TEE_DEST

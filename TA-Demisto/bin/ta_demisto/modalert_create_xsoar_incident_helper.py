@@ -1,6 +1,5 @@
 import json
 import splunk
-from json import JSONDecodeError
 from six.moves.urllib.parse import quote
 from six.moves.urllib.request import pathname2url
 from ta_demisto.modalert_create_xsoar_incident_utils import get_incident_occurred_field, get_incident_labels, \
@@ -40,7 +39,7 @@ def process_event(helper, *args, **kwargs):
     server_to_cert = {}
     try:
         server_to_cert = json.loads(str(ssl_cert_loc))
-    except JSONDecodeError:
+    except ValueError:
         helper.log_debug('Failed to parse ssl_cert_loc to json, ssl_cert_loc={}'.format(str(ssl_cert_loc)))
 
     proxy_settings = helper.get_proxy()
@@ -53,7 +52,7 @@ def process_event(helper, *args, **kwargs):
             server_url = server_url.replace('http:', 'https:')
 
             try:
-                if server_to_cert and server_to_cert.get(server_url):
+                if isinstance(server_to_cert, dict) and server_to_cert.get(server_url):
                     ssl_cert_tmp = server_to_cert.get(server_url)
                 else:
                     ssl_cert_tmp = ssl_cert_loc
@@ -73,13 +72,15 @@ def process_event(helper, *args, **kwargs):
                     method='POST',
                     headers=headers,
                     payload=incident,
-                    verify=verify,
-                    cert=ssl_cert_tmp,
+                    verify=ssl_cert_tmp if ssl_cert_tmp and verify else verify,
                     use_proxy=proxy_enabled
                 )
 
                 helper.log_debug('resp.status_code = {}'.format(str(resp.status_code)))
-                helper.log_debug('resp.content = {}'.format(json.dumps(resp.json(), indent=4, sort_keys=True)))
+                try:
+                    helper.log_debug('resp.json = {}'.format(json.dumps(resp.json(), indent=4, sort_keys=True)))
+                except Exception:
+                    helper.log_debug('Could not deserialize response, resp.text = {}'.format(resp.text))
 
             except Exception as e:
                 helper.log_error(
@@ -127,11 +128,19 @@ def get_configured_servers(helper):
                                                  getargs={'output_mode': 'json'})
 
     conf_dict = json.loads(content)
+    if not isinstance(conf_dict, dict):
+        raise TypeError('Invalid content from TA_Demisto_account. conf_dict = {}'.format(conf_dict))
     servers = []
 
     if success and conf_dict:
         for entry in conf_dict.get('entry', []):
+            if not isinstance(entry, dict):
+                raise TypeError('Invalid content from TA_Demisto_account. entry = {}'.format(entry))
+
             entry_content = entry.get('content', {})
+            if not isinstance(entry_content, dict):
+                raise TypeError('Invalid content from TA_Demisto_account. entry_content = {}'.format(entry_content))
+
             servers.append(entry_content.get('username'))
 
     return servers
@@ -152,6 +161,10 @@ def get_servers_details(helper):
 
     for server in servers:
         account = helper.get_user_credential(server)
+
+        if not isinstance(account, dict):
+            raise TypeError('Invalid type. account = {}'.format(account))
+
         api_key = account.get('password')
         servers_to_api_keys[server.strip('/')] = api_key
 
@@ -159,21 +172,25 @@ def get_servers_details(helper):
 
 
 def get_search_data(helper):
-    search_query = None
-    search_name = helper.settings.get('search_name')
-    results_link = helper.settings.get('results_link')
-    search_uri = helper.settings.get('search_uri')
+    search_query = ''
 
-    helper.log_info('Alert name is ' + search_name)
-    helper.log_info('Search URI is ' + search_uri)
-    helper.log_info('Manually created Search URI is ' + '/services/saved/searches/' + quote(search_name))
+    if not isinstance(helper.settings, dict):
+        raise TypeError('Invalid type. helper.settings = {}'.format(helper.settings))
+
+    search_name = helper.settings.get('search_name', '')
+    results_link = helper.settings.get('results_link', '')
+    search_uri = helper.settings.get('search_uri', '')
+
+    helper.log_info('Alert name is {}'.format(search_name))
+    helper.log_info('Search URI is {}'.format(search_uri))
+    helper.log_info('Manually created Search URI is /services/saved/searches/{}'.format(quote(search_name)))
 
     if not search_name:
         helper.log_info('Creating search uri')
         search_app_name = helper.settings.get('app', '')
         if '|' in search_app_name:
             search_name = '//|'.join(search_app_name.split('|'))
-        search_uri = pathname2url('/services/saved/searches/' + quote(search_name))
+        search_uri = pathname2url('/services/saved/searches/{}'.format(quote(search_name)))
 
     r = splunk.rest.simpleRequest(search_uri,
                                   sessionKey=helper.session_key,
@@ -183,6 +200,6 @@ def get_search_data(helper):
     if len(result_op['entry']) > 0:
         search_query = result_op['entry'][0]['content']['qualifiedSearch']
 
-    helper.log_info('Search query is ' + search_query)
+    helper.log_info('Search query is {}'.format(search_query))
 
     return search_query, search_name, results_link

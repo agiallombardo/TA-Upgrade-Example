@@ -1,4 +1,4 @@
-Splunk Add-on for RSA SecurID version 1.2.0
-Copyright (C) 2020 Splunk Inc. All Rights Reserved.
+Splunk Add-on for RSA SecurID
+Copyright (C) 2021 Splunk Inc. All Rights Reserved.
 
 For documentation, see: http://docs.splunk.com/Documentation/AddOns/latest/RSASecurID

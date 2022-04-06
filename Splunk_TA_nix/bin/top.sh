@@ -30,7 +30,7 @@ elif [ "x$KERNEL" = "xAIX" ] ; then
         # Substitute ? for temporary [field 7] &
         # Substitute R(running) for A(Active) on field 8 in AIX by Jacky Ho, Systex 
 elif [ "x$KERNEL" = "xDarwin" ] ; then
-	if [ "$OSX_MAJOR_VERSION" -ge 9 ]; then
+	if [ "$OSX_MAJOR_VERSION" == 10 ] && [ "$OSX_MINOR_VERSION" -ge 9 ] || [ "$OSX_MAJOR_VERSION" -ge 11 ]; then
 		# OS X 10.9 does not report rshrd statistic (Resident Shared Address Space Size)
 		CMD="eval top -F -l 2 -ocpu -Otime -stats pid,username,vsize,rsize,cpu,time,command"
 		FORMAT='{gsub("[+-] ", " "); virt=$3; res=$4; shr="?"; pctCPU=$5; cpuTIME=$6; command=$7; $3="?"; $4="?"; $5=virt; $6=res; $7=shr; $8="?"; $9=pctCPU; $10="?"; $11=cpuTIME; $12=command}'

@@ -1,12 +1,13 @@
-from future import standard_library
-standard_library.install_aliases()
-from builtins import range
+#
+# SPDX-FileCopyrightText: 2021 Splunk, Inc. <sales@splunk.com>
+# SPDX-License-Identifier: LicenseRef-Splunk-8-2021
+#
+#
 import urllib.request, urllib.parse, urllib.error
 import json
 import logging
 from traceback import format_exc
 
-import ta_util2.httplib2_helper
 import httplib2
 import ta_util2.log_files as log_files
 

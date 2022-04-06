@@ -6,19 +6,19 @@ EventCode,action,change_type,object_category
 4741,created,user,user
 624,created,user,user
 645,created,user,user
-4722,modified,user,user
+4722,modified,AAA,user
 626,modified,user,user
-4723,modified,user,user
+4723,modified,AAA,user
 627,modified,user,user
-4724,modified,user,user
+4724,modified,AAA,user
 628,modified,user,user
-4725,modified,user,user
+4725,modified,AAA,user
 629,modified,user,user
-4726,deleted,user,user
+4726,deleted,AAA,user
 4743,deleted,user,user
 630,deleted,user,user
 647,deleted,user,user
-4738,modified,user,user
+4738,modified,AAA,user
 4742,modified,user,user
 642,modified,user,user
 646,modified,user,user
@@ -26,7 +26,7 @@ EventCode,action,change_type,object_category
 644,modified,user,user
 625,modified,user,user
 671,modified,user,user
-4767,modified,user,user
+4767,modified,AAA,user
 1101,success,audit,audit
 1108,success,audit,audit
 4719,,audit,audit
@@ -51,4 +51,7 @@ EventCode,action,change_type,object_category
 4757,,AAA,user
 4758,,AAA,universal group
 4764,,AAA,group
-4781,,AAA,user
+4781,modified,AAA,user
+4703,modified,AAA,user
+4704,modified,AAA,user
+4705,modified,AAA,user

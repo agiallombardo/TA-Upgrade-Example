@@ -47,11 +47,12 @@ case "x$KERNEL" in
         AWK=nawk
         ;;
     "xDarwin")
-        OSX_MAJOR_VERSION=`sw_vers | sed -En '/ProductVersion/ s/^[^.]+\.([0-9]+)(\.[^.])?$/\1/p'`
+        OSX_MINOR_VERSION=`sw_vers | sed -En '/ProductVersion/ s/^[^.]+\.([0-9]+)(\.[^.])?$/\1/p'`
+        OSX_MAJOR_VERSION=`sw_vers | sed -En '/ProductVersion/ s/^[^0-9]+([0-9]+)\.[0-9]+(\.[^.]+)?$/\1/p'`
         
         # OSX_GE_SNOW_LEOPARD is for backward compatiblity.
-        # Recommend that new code just use $OSX_MAJOR_VERSION directly.
-        if [ "$OSX_MAJOR_VERSION" -ge 6 ]; then
+        # Recommend that new code just use $OSX_MINOR_VERSION directly.
+        if [ "$OSX_MAJOR_VERSION" == 10 ] && [ "$OSX_MINOR_VERSION" -ge 6 ]; then
             OSX_GE_SNOW_LEOPARD=true;
         else
             OSX_GE_SNOW_LEOPARD=false;

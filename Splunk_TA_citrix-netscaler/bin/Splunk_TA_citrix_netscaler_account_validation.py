@@ -1,5 +1,5 @@
 #
-# SPDX-FileCopyrightText: 2020 Splunk, Inc. <sales@splunk.com>
+# SPDX-FileCopyrightText: 2021 Splunk, Inc. <sales@splunk.com>
 # SPDX-License-Identifier: LicenseRef-Splunk-1-2020
 #
 #
@@ -16,6 +16,7 @@ import json
 import traceback
 import copy
 from splunktaucclib.rest_handler.endpoint.validator import Validator
+from citrix_netscaler import proxy_port_value_validation
 
 APP_NAME = "Splunk_TA_citrix-netscaler"
 _LOGGER = utils.setup_logging("ta_citrix_netscaler_appliance_validation")
@@ -57,72 +58,74 @@ class AccountValidation(Validator):
         
         ## Get SSL and Proxy configurations from splunk_ta_citrix_netscaler_settings.conf
         defaults = self.get_ssl_proxy_settings(copy.deepcopy(data))
-        
-        if defaults['account_name'] != "" and defaults['account_password'] != "":
-            ## Validate if http_scheme is valid, i.e. http or https
-            http_scheme = defaults['http_scheme']
-            _LOGGER.debug("Validating http_scheme parameter value from splunk_ta_citrix_netscaler_settings.conf")
-            if http_scheme.lower() not in ('http', 'https'):
-                msg = (
-                "In splunk_ta_citrix_netscaler_settings.conf, the http_scheme value, {}, is invalid. The only valid values are http and https. To add an appliance, update this value and retry.".format(
-                    http_scheme))
-                _LOGGER.error(
-                    "Incorrect http_scheme value, %s, in the splunk_ta_citrix_netscaler_settings.conf file of the Splunk Add-on for Citrix Netscaler. To connect successfully to host %s, enter a valid http_scheme value (http or https)",
-                    http_scheme, defaults["server_url"])
-                self.put_msg(msg, True)
-                return False
-            _LOGGER.debug("http_scheme parameter value %s, successfully validated", http_scheme)
 
-            ## Append http_scheme to host and form the url
-            application_url = defaults['http_scheme'] + "://" + defaults['server_url'] + "/nitro/v1/config/login"
+        ## Validate if proxy port is valid
+        if utils.is_true(defaults.get("proxy_enabled") or "0") and "proxy_port" in defaults and not proxy_port_value_validation(defaults["proxy_port"]):
+            self.put_msg("Invalid Proxy Port value in Configuration file, Proxy Port should be within the range of [1 and 65535]", True)
+            return False
 
-            payload = json.dumps(
-                {"login": {"username": defaults['account_name'], "password": defaults['account_password']}})
-            headers = {"Content-Type": "application/json", }
+        ## Validate if http_scheme is valid, i.e. http or https
+        http_scheme = defaults['http_scheme']
+        _LOGGER.debug("Validating http_scheme parameter value from splunk_ta_citrix_netscaler_settings.conf")
+        if http_scheme.lower() not in ('http', 'https'):
+            msg = (
+            "In splunk_ta_citrix_netscaler_settings.conf, the http_scheme value, {}, is invalid. The only valid values are http and https. To add an appliance, update this value and retry.".format(
+                http_scheme))
+            _LOGGER.error(
+                "Incorrect http_scheme value, %s, in the splunk_ta_citrix_netscaler_settings.conf file of the Splunk Add-on for Citrix Netscaler. To connect successfully to host %s, enter a valid http_scheme value (http or https)",
+                http_scheme, defaults["server_url"])
+            self.put_msg(msg, True)
+            return False
+        _LOGGER.debug("http_scheme parameter value %s, successfully validated", http_scheme)
+
+        ## Append http_scheme to host and form the url
+        application_url = defaults['http_scheme'] + "://" + defaults['server_url'] + "/nitro/v1/config/login"
+
+        payload = json.dumps(
+            {"login": {"username": defaults['account_name'], "password": defaults['account_password']}})
+        headers = {"Content-Type": "application/json", }
+
+        try:
             _http = rest.build_http_connection(defaults)
-
-            try:
-                resp, content = _http.request(application_url, method="POST", headers=headers, body=payload)
-            except SSLHandshakeError:
-                msg = (
-                    "Failed to verify your SSL certificate. Verify your SSL configurations in splunk_ta_citrix_netscaler_settings.conf and retry.")
-                self.put_msg(msg, True)
-                _LOGGER.error(
-                    "Failed to verify the SSL Certificate for Citrix Netscaler host %s. Verify your SSL configurations in splunk_ta_citrix_netscaler_settings.conf.\nreason=%s",
-                    defaults['server_url'], traceback.format_exc())
-                return False
-            except httplib2.ServerNotFoundError:
-                msg = (
-                    "Unable to find Citrix Netscaler server {}. Check your Host details or network connection, and retry.".format(
-                        defaults["server_url"]))
-                _LOGGER.error(
-                    "Unable to reach Citrix Netscaler server %s. Verify the host and retry.\nreason=%s",
-                    defaults["server_url"], traceback.format_exc())
-                self.put_msg(msg, True)
-                return False
-            except Exception:
-                msg = (
-                    "Some error occured while validating credentials for Citrix Netscaler host {}. Check ta_citrix_netscaler_appliance_validation.log for more details.".format(
-                        defaults["server_url"]))
-                _LOGGER.error(
-                    "While validating credentials for Citrix Netscaler host %s, some error occured. Check the Host value you entered in the Splunk Add-on for Citrix Netscaler or your network connection, and try again.\nreason=%s",
-                    defaults["server_url"], traceback.format_exc())
+            resp, content = _http.request(application_url, method="POST", headers=headers, body=payload)
+        except SSLHandshakeError:
+            msg = (
+                "Failed to verify your SSL certificate. Verify your SSL configurations in splunk_ta_citrix_netscaler_settings.conf and retry.")
+            self.put_msg(msg, True)
+            _LOGGER.error(
+                "Failed to verify the SSL Certificate for Citrix Netscaler host %s. Verify your SSL configurations in splunk_ta_citrix_netscaler_settings.conf.\nreason=%s",
+                defaults['server_url'], traceback.format_exc())
+            return False
+        except httplib2.ServerNotFoundError:
+            msg = (
+                "Unable to find Citrix Netscaler server {}. Check your Host details or network connection, and retry.".format(
+                    defaults["server_url"]))
+            _LOGGER.error(
+                "Unable to reach Citrix Netscaler server %s. Verify the host and retry.\nreason=%s",
+                defaults["server_url"], traceback.format_exc())
+            self.put_msg(msg, True)
+            return False
+        except Exception:
+            msg = (
+                "Some error occured while validating credentials for Citrix Netscaler host {}. Check ta_citrix_netscaler_appliance_validation.log for more details.".format(
+                    defaults["server_url"]))
+            _LOGGER.error(
+                "While validating credentials for Citrix Netscaler host %s, some error occured. Check the Host value you entered in the Splunk Add-on for Citrix Netscaler or your network connection, and try again.\nreason=%s",
+                defaults["server_url"], traceback.format_exc())
+            self.put_msg(msg, True)
+            return False
+        else:
+            if int(resp['status']) not in (200, 201):
+                dict_content = json.loads(content)
+                response_message = dict_content['message']
+                msg = ("{}".format(response_message))
+                _LOGGER.error("%s", format(response_message))
                 self.put_msg(msg, True)
                 return False
             else:
-                if int(resp['status']) not in (200, 201):
-                    dict_content = json.loads(content)
-                    response_message = dict_content['message']
-                    msg = ("{}".format(response_message))
-                    _LOGGER.error("%s", format(response_message))
-                    self.put_msg(msg, True)
-                    return False
-                else:
-                    _LOGGER.info("Successfully validated Citrix Netscaler appliance %s's credentials.",
-                                defaults["server_url"])
-                    return True
-        else:
-            return True
+                _LOGGER.info("Successfully validated Citrix Netscaler appliance %s's credentials.",
+                            defaults["server_url"])
+                return True
 
 class ProxyValidation(Validator):
     """

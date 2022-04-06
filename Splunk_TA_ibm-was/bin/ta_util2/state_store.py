@@ -1,4 +1,8 @@
-from builtins import object
+#
+# SPDX-FileCopyrightText: 2021 Splunk, Inc. <sales@splunk.com>
+# SPDX-License-Identifier: LicenseRef-Splunk-8-2021
+#
+#
 import os.path as op
 import os
 import json
@@ -7,7 +11,7 @@ import ta_util2.kv_client as kvc
 import ta_util2.utils as utils
 
 
-class StateStore(object):
+class StateStore:
 
     def __init__(self, meta_configs, appname, use_kv_store=False):
         """

@@ -1,5 +1,5 @@
 ##
-## SPDX-FileCopyrightText: 2020 Splunk, Inc. <sales@splunk.com>
+## SPDX-FileCopyrightText: 2021 Splunk, Inc. <sales@splunk.com>
 ## SPDX-License-Identifier: LicenseRef-Splunk-1-2020
 ##
 ##
@@ -8,9 +8,6 @@
 This module hanles configuration related stuff
 """
 
-from future import standard_library
-standard_library.install_aliases()
-from builtins import object
 import os
 import sys
 import subprocess
@@ -32,7 +29,6 @@ _LOGGER = logging.getLogger(log_files.ta_util_conf)
 def _parse_modinput_configs(root, outer_block, inner_block):
     """
     When user splunkd spawns modinput script to do config check or run
-
     <?xml version="1.0" encoding="UTF-8"?>
     <input>
       <server_host>localhost.localdomain</server_host>
@@ -49,9 +45,7 @@ def _parse_modinput_configs(root, outer_block, inner_block):
         ...
       </configuration>
     </input>
-
     When user create an stanza through data input on WebUI
-
     <?xml version="1.0" encoding="UTF-8"?>
     <items>
       <server_host>localhost.localdomain</server_host>
@@ -101,7 +95,7 @@ def parse_modinput_configs(config_str):
     @return: meta_config and stanza_config
     """
 
-    import xml.dom.minidom as xdm
+    import defusedxml.minidom as xdm
 
     meta_configs = {
         "server_host": None,
@@ -144,8 +138,7 @@ def get_modinput_configs(modinput, modinput_stanza=None):
     if modinput_stanza:
         cli.append(modinput_stanza)
 
-    out, err = subprocess.Popen(cli, stdout=subprocess.PIPE,
-                                stderr=subprocess.PIPE).communicate()
+    out, err = subprocess.Popen(cli, stdout=subprocess.PIPE, stderr=subprocess.PIPE).communicate() # nosemgrep false-positive: The vulnerable method get_modinput_configs in the framework file is not getting used anywhere in the add-on v8.1.0
     if err:
         _LOGGER.error("Failed to get modinput configs with error: %s", err)
         return None, None
@@ -153,7 +146,7 @@ def get_modinput_configs(modinput, modinput_stanza=None):
         return parse_modinput_configs(out)
 
 
-class TAConfig(object):
+class TAConfig:
 
     encrypted = "******"
     username_password_sep = "``"
@@ -298,7 +291,7 @@ def reload_confs(confs, session_key, splunkd_uri="https://localhost:8089",
                           endpoint, resp.reason if resp else "")
 
 
-class ConfManager(object):
+class ConfManager:
 
     def __init__(self, splunkd_uri, session_key):
         self.splunkd_uri = splunkd_uri

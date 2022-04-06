@@ -1,5 +1,5 @@
 #
-# SPDX-FileCopyrightText: 2020 Splunk, Inc. <sales@splunk.com>
+# SPDX-FileCopyrightText: 2021 Splunk, Inc. <sales@splunk.com>
 # SPDX-License-Identifier: LicenseRef-Splunk-1-2020
 #
 #
@@ -39,14 +39,14 @@ fields = [
     ), 
     field.RestField(
         'account_name',
-        required=False,
+        required=True,
         encrypted=True,
         default=None,
         validator=None
     ), 
     field.RestField(
         'account_password',
-        required=False,
+        required=True,
         encrypted=True,
         default=None,
         validator=AccountValidation()

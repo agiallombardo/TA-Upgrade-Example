@@ -1,5 +1,5 @@
 ##
-## SPDX-FileCopyrightText: 2020 Splunk, Inc. <sales@splunk.com>
+## SPDX-FileCopyrightText: 2021 Splunk, Inc. <sales@splunk.com>
 ## SPDX-License-Identifier: LicenseRef-Splunk-1-2020
 ##
 ##
@@ -8,10 +8,6 @@
 A simple thread pool implementation
 """
 
-from future import standard_library
-standard_library.install_aliases()
-from builtins import range
-from builtins import object
 import threading
 import queue
 import multiprocessing
@@ -25,7 +21,7 @@ import ta_util2.log_files as log_files
 _LOGGER = logging.getLogger(log_files.ta_util)
 
 
-class ThreadPool(object):
+class ThreadPool:
     """
     A simple thread pool implementation
     """

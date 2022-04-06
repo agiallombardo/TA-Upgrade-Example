@@ -1,6 +1,8 @@
-from future import standard_library
-standard_library.install_aliases()
-from builtins import object
+#
+# SPDX-FileCopyrightText: 2021 Splunk, Inc. <sales@splunk.com>
+# SPDX-License-Identifier: LicenseRef-Splunk-8-2021
+#
+#
 import queue
 import threading
 import sys
@@ -11,7 +13,7 @@ import ta_util2.log_files as log_files
 _LOGGER = logging.getLogger(log_files.ta_util)
 
 
-class EventWriter(object):
+class EventWriter:
 
     def __init__(self):
         self._event_queue = queue.Queue()

@@ -1,10 +1,12 @@
+#
+# SPDX-FileCopyrightText: 2021 Splunk, Inc. <sales@splunk.com>
+# SPDX-License-Identifier: LicenseRef-Splunk-8-2021
+#
+#
 """
 This module hanles configuration related stuff
 """
 
-from future import standard_library
-standard_library.install_aliases()
-from builtins import object
 import os
 import sys
 import subprocess
@@ -95,7 +97,7 @@ def parse_modinput_configs(config_str):
     @return: meta_config and stanza_config
     """
 
-    import xml.dom.minidom as xdm
+    import defusedxml.minidom as xdm
 
     meta_configs = {
         "server_host": None,
@@ -137,8 +139,9 @@ def get_modinput_configs(modinput, modinput_stanza=None):
     cli = [splunkbin, "cmd", "splunkd", "print-modinput-config", modinput]
     if modinput_stanza:
         cli.append(modinput_stanza)
-
-    out, err = subprocess.Popen(cli, stdout=subprocess.PIPE,
+        
+    # semgrep ignore reason: `cli` is not controllable by an external resource
+    out, err = subprocess.Popen(cli, stdout=subprocess.PIPE, # nosemgrep: python.lang.security.audit.dangerous-subprocess-use.dangerous-subprocess-use
                                 stderr=subprocess.PIPE).communicate()
     if err:
         _LOGGER.error("Failed to get modinput configs with error: %s", err)

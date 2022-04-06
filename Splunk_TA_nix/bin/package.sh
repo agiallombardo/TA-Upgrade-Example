@@ -26,7 +26,7 @@ elif [ "x$KERNEL" = "xSunOS" ] ; then
 	SEPARATE_RECORDS='!/^$/ {next} {release = release ? release : "?"}'
 elif [ "x$KERNEL" = "xAIX" ] ; then
 	CMD='eval lslpp -icq | sed "s,:, ," | sed "s,:.*,,"'
-	FORMAT='{name=$2 ; version=$3 ; vendor=release=arch=group="?"}' 
+	FORMAT='{name=$2 ; version=$3 ; vendor=release=arch=group="?"}'
 elif [ "x$KERNEL" = "xDarwin" ] ; then
 	CMD='system_profiler SPApplicationsDataType'
 	FILTER='{ if (NR<3) next}'
@@ -39,7 +39,7 @@ elif [ "x$KERNEL" = "xHP-UX" ] ; then
     FORMAT='{release="?"; group="?"; vendor="?"; name=$1; version=$2; arch=$3} NF==4 {vendor=$4}'
 elif [ "x$KERNEL" = "xFreeBSD" ] ; then
 	# the below syntax is valid when using zsh, bash, ksh
-	if [[ $KERNEL_RELEASE =~ 10.* ]] || [[ $KERNEL_RELEASE =~ 11.* ]] || [[ $KERNEL_RELEASE =~ 12.* ]]; then
+	if [[ $KERNEL_RELEASE =~ 10.* ]] || [[ $KERNEL_RELEASE =~ 11.* ]] || [[ $KERNEL_RELEASE =~ 12.* ]] || [[ $KERNEL_RELEASE =~ 13.* ]]; then
 		CMD='eval pkg info --raw --all | grep "^name:\|^version:\|^arch:" | cut -d\" -f2'
 		HEADER='NAME                                               VERSION                                            ARCH        '
 		HEADERIZE="BEGIN {print \"$HEADER\"}"

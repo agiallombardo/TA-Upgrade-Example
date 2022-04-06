@@ -2,11 +2,11 @@
 # SPDX-FileCopyrightText: 2021 Splunk, Inc. <sales@splunk.com>
 # SPDX-License-Identifier: Apache-2.0
 
+# jscpd:ignore-start
 . `dirname $0`/common.sh
 
 HEADER='USER                                   PID   PSR   pctCPU       CPUTIME  pctMEM     RSZ_KB     VSZ_KB   TTY      S          ELAPSED    OSName                                   OS_version  IP_address        COMMAND             ARGS'
 FORMAT='{sub("^_", "", $1); if (NF>12) {args=$13; for (j=14; j<=NF; j++) args = args "_" $j} else args="<noArgs>"; sub("^[^\134[: -]*/", "", $12);OSName=OSName;OS_version=OS_version;IP_address=IP_address;}'
-NORMALIZE='(NR>1) {if ($4<0 || $4>100) $4=0; if ($6<0 || $6>100) $6=0}'
 PRINTF='{if (NR == 1) {print $0} else {printf "%-32.32s  %8s  %4s   %6s  %12s  %6s   %8s   %8s   %-7.7s  %1.1s  %15s    %-35s %15s  %-16s  %-100.100s  %s\n", $1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, OSName, OS_version, IP_address, $12, args}}'
 FILL_DIMENSIONS='{length(IP_address) || IP_address = "?";length(OS_version) || OS_version = "?";length(OSName) || OSName = "?"}'
 
@@ -55,5 +55,6 @@ elif [ "x$KERNEL" = "xFreeBSD" ] ; then
 	fi
 fi
 
-$CMD | tee $TEE_DEST | $AWK $DEFINE "$HEADERIZE $FILL_BLANKS $FILL_DIMENSIONS $FORMAT $NORMALIZE $PRINTF"  header="$HEADER"
-echo "Cmd = [$CMD];  | $AWK $DEFINE '$HEADERIZE $FILL_BLANKS $FILL_DIMENSIONS $FORMAT $NORMALIZE $PRINTF' header=\"$HEADER\"" >> $TEE_DEST
+$CMD | tee $TEE_DEST | $AWK $DEFINE "$HEADERIZE $FILL_BLANKS $FILL_DIMENSIONS $FORMAT $PRINTF"  header="$HEADER"
+echo "Cmd = [$CMD];  | $AWK $DEFINE '$HEADERIZE $FILL_BLANKS $FILL_DIMENSIONS $FORMAT $PRINTF' header=\"$HEADER\"" >> $TEE_DEST
+# jscpd:ignore-end

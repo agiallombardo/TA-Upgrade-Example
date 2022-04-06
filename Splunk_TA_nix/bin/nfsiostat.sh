@@ -59,7 +59,6 @@ if [ "x$KERNEL" = "xLinux" ] ; then
                     w_avg_exe=$7
                     printf "%s %s %s %s %s %s %s %s %s %s %s\n",device, path, r_op_s, w_op_s, r_kb_s, w_kb_s, rpc_backlog, r_avg_rtt, w_avg_rtt, r_avg_exe, w_avg_exe
                 }
-                
             }'
         else
             FORMAT='{
@@ -100,29 +99,55 @@ if [ "x$KERNEL" = "xLinux" ] ; then
         fi
     # For CentOS and RHEL
     else
-        FORMAT='{
-            if (NR%9==2){
-                device=$1
-                path=substr($4, 1, length($4)-1)
-            }
-            else if (NR%9==5){
-                rpc_backlog=$2
-            }
-            else if (NR%9==7){
-                r_op_s=$1
-                r_kb_s=$2
-                r_avg_rtt=$6
-                r_avg_exe=$7
-            }
-            else if (NR%9==0){
-                w_op_s=$1
-                w_kb_s=$2
-                w_avg_rtt=$6
-                w_avg_exe=$7
-                printf "%s %s %s %s %s %s %s %s %s %s %s\n",device, path, r_op_s, w_op_s, r_kb_s, w_kb_s, rpc_backlog, r_avg_rtt, w_avg_rtt, r_avg_exe, w_avg_exe
-            }
-
-        }'
+        #For RHEL 8.4 and RHEL 8.3
+        if [ -e $OS_FILE ] && (awk -F'=' '/ID=/ {print $2}' $OS_FILE | grep -q rhel) && (awk -F'=' '/VERSION_ID=/ {print $2}' $OS_FILE | grep -Eq 8.4\|8.3);
+        then
+            FORMAT='{
+                if (NR%10==2){
+                    device=$1
+                    path=substr($4, 1, length($4)-1)
+                }
+                else if (NR%10==5){
+                    rpc_backlog=$2
+                }
+                else if (NR%10==8){
+                    r_op_s=$1
+                    r_kb_s=$2
+                    r_avg_rtt=$6
+                    r_avg_exe=$7
+                }
+                else if (NR%10==0){
+                    w_op_s=$1
+                    w_kb_s=$2
+                    w_avg_rtt=$6
+                    w_avg_exe=$7
+                    printf "%s %s %s %s %s %s %s %s %s %s %s\n",device, path, r_op_s, w_op_s, r_kb_s, w_kb_s, rpc_backlog, r_avg_rtt, w_avg_rtt, r_avg_exe, w_avg_exe
+                }
+            }'
+        else
+            FORMAT='{
+                if (NR%9==2){
+                    device=$1
+                    path=substr($4, 1, length($4)-1)
+                }
+                else if (NR%9==5){
+                    rpc_backlog=$2
+                }
+                else if (NR%9==7){
+                    r_op_s=$1
+                    r_kb_s=$2
+                    r_avg_rtt=$6
+                    r_avg_exe=$7
+                }
+                else if (NR%9==0){
+                    w_op_s=$1
+                    w_kb_s=$2
+                    w_avg_rtt=$6
+                    w_avg_exe=$7
+                    printf "%s %s %s %s %s %s %s %s %s %s %s\n",device, path, r_op_s, w_op_s, r_kb_s, w_kb_s, rpc_backlog, r_avg_rtt, w_avg_rtt, r_avg_exe, w_avg_exe
+                }
+            }'
+        fi
     fi
     $CMD | tee $TEE_DEST |  awk "$HEADERIZE $FORMAT" | column -t
     echo "Cmd = [$CMD];  | awk '$HEADERIZE $FORMAT' header=\"$HEADER\"" >> $TEE_DEST

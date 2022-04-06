@@ -1,3 +1,8 @@
+#
+# SPDX-FileCopyrightText: 2021 Splunk, Inc. <sales@splunk.com>
+# SPDX-License-Identifier: LicenseRef-Splunk-8-2021
+#
+#
 """
 Create scheduling jobs
 """
@@ -55,4 +60,4 @@ class HpelJobFactory(jf.JobFactory):
         job[c.state_store] = ss.StateStore(
             job, appname, use_kv_store=job.get("use_kv_store"))
         collector = self.hdl.HpelDataLoader(job)
-        return HpelCollectionJob(job[c.log_viewer], job, collector)
+        return HpelCollectionJob(job[c.log_viewer] + ":" + job[c.server], job, collector)

@@ -1,0 +1,43 @@
+vendor_action,status,change_type,object_category
+The client has downloaded the content package successfully,success,,filesystem
+The client has downloaded the policy successfully,success,,filesystem
+The client has reconnected with the management server,success,,application
+The client has downloaded the auto-upgrade configuration file successfully,success,,filesystem
+The client computer has been added to the group,success,,group
+The client registered with the management server successfully,success,,application
+Package properties have been changed,success,property,filesystem
+Client has downloaded the issued Command,success,,application
+Administrator logout,success,AAA,application
+Computer properties have been changed,success,property,application
+Computer mode has been switched,success,property,application
+User mode has been switched,success,property,application
+Deployment package has been created,success,filesystem,filesystem
+Computer * has been deleted,success,database,application
+Policy has been edited*,success,,
+An update for *,,filesystem,filesystem
+Downloaded new content update *,,filesystem,filesystem
+Connected to Symantec Endpoint Protection Manager*,,filesystem,application
+Disconnected from Symantec Endpoint Protection Manager*,,filesystem,application
+Applied new policy with serial number*,,filesystem,application
+Symantec Endpoint Protection Tamper Protection Enabled,,filesystem,application
+Symantec Management Client has been started.,,filesystem,application
+Symantec Management Client is stopped.,,filesystem,application
+The client has successfully downloaded and applied a license file *,,filesystem,filesystem
+Received a new policy with serial number*,,filesystem,filesystem
+A LiveUpdate session ran successfully*,,filesystem,application
+Added Symantec license*,,filesystem,application
+Deleted Symantec license*,,filesystem,application
+Management server started up successfully,,server,application
+Management server shut down gracefully,,server,application
+Transaction log truncation succeeded and finished.,,filesystem,filesystem
+Successfully downloaded*,,filesystem,filesystem
+Download started.,,filesystem,filesystem
+Backup initiated by scheduled task*,,filesystem,application
+Backup succeeded and finished*,,filesystem,filesystem
+System Administrator *,success,AAA,application
+The password of system administrator *,success,AAA,application
+Domain administrator * ,success,AAA,application
+Domain '* ,success,filesystem,application
+Policy has been*,,policy,filesystem
+Added shared policy upon system install*,,policy,filesystem
+Group * was deleted,success,AAA,group

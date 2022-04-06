@@ -14,3 +14,6 @@ The Zscaler Splunk App is supported by the Zscaler Team: all requests for suppor
 
 
 
+# Binary File Declaration
+/Applications/Splunk/var/data/tabuilder/package/TA-Zscaler_CIM/bin/ta_zscaler_cim/aob_py2/markupsafe/_speedups.so: this file does not require any source code
+/Applications/Splunk/var/data/tabuilder/package/TA-Zscaler_CIM/bin/ta_zscaler_cim/aob_py3/markupsafe/_speedups.cpython-37m-x86_64-linux-gnu.so: this file does not require any source code

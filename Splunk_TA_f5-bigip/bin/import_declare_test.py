@@ -1,23 +1,14 @@
-
 import os
-import sys
 import re
+import sys
 from os.path import dirname
 
-sys.path.insert(0, os.path.sep.join([os.path.dirname(os.path.realpath(os.path.dirname(__file__))), 'lib']))
-if sys.version_info < (3, 0):
-    sys.path.insert(0, os.path.sep.join([os.path.dirname(os.path.realpath(os.path.dirname(__file__))), 'lib', 'py2']))
-else:
-    sys.path.insert(0, os.path.sep.join([os.path.dirname(os.path.realpath(os.path.dirname(__file__))), 'lib', 'py3']))
-
-ta_name = 'Splunk_TA_f5-bigip'
-tasks_conf_file = "f5_bigip_tasks"
-inputs_conf_file = "inputs"
-settings_conf_file = "splunk_ta_f5_settings"
-existing_templates_conf = 'f5_bigip_templates'
-existing_servers_conf = 'f5_bigip_servers'
-passwords_migration_stanza = "passwords_migration"
-inputs_migration_stanza = "inputs_migration"
-templates_migration_stanza = "templates_migration"
-servers_conf = 'f5_servers'
-templates_conf = 'f5_templates'
+ta_name = "Splunk_TA_f5-bigip"
+pattern = re.compile(r"[\\/]etc[\\/]apps[\\/][^\\/]+[\\/]bin[\\/]?$")
+new_paths = [path for path in sys.path if not pattern.search(path) or ta_name in path]
+new_paths.append(os.path.join(dirname(dirname(__file__)), "lib"))
+new_paths.insert(0, os.path.sep.join([os.path.dirname(__file__), ta_name]))
+sys.path = new_paths
+TEMPLATES_CONF = "f5_templates_ts"
+CHECKPOINTER = "namespace_collection"
+SETTINGS_CONF = "splunk_ta_f5_settings"

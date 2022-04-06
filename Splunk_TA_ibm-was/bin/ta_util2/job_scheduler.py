@@ -1,10 +1,12 @@
+#
+# SPDX-FileCopyrightText: 2021 Splunk, Inc. <sales@splunk.com>
+# SPDX-License-Identifier: LicenseRef-Splunk-8-2021
+#
+#
 """
 A simple scheduler which schedules the periodic or once job
 """
 
-from future import standard_library
-standard_library.install_aliases()
-from builtins import object
 import logging
 import threading
 import queue
@@ -17,7 +19,7 @@ import ta_util2.scheduler as sched
 _LOGGER = logging.getLogger(log_files.ta_util)
 
 
-class JobScheduler(object):
+class JobScheduler:
 
     def __init__(self, job_factory, scheduler=None):
         """

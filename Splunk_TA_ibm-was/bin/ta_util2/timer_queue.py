@@ -1,11 +1,11 @@
+#
+# SPDX-FileCopyrightText: 2021 Splunk, Inc. <sales@splunk.com>
+# SPDX-License-Identifier: LicenseRef-Splunk-8-2021
+#
+#
 """
 A timer queue implementation
 """
-from __future__ import absolute_import
-
-from future import standard_library
-standard_library.install_aliases()
-from builtins import object
 import threading
 import queue
 from time import time
@@ -19,12 +19,12 @@ import ta_util2.log_files as log_files
 _LOGGER = logging.getLogger(log_files.ta_util)
 
 
-class TimerQueue(object):
+class TimerQueue:
     """
     A timer queue implementation, runs a separate thread to handle timers
     """
 
-    import ta_util2.sortedcontainers as sc
+    import sortedcontainers as sc
 
     def __init__(self):
         self._timers = TimerQueue.sc.SortedSet()

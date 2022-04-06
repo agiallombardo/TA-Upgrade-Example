@@ -1,11 +1,13 @@
+#
+# SPDX-FileCopyrightText: 2021 Splunk, Inc. <sales@splunk.com>
+# SPDX-License-Identifier: LicenseRef-Splunk-8-2021
+#
+#
 """
 Handles credentials related stuff
 """
 
-from future import standard_library
-standard_library.install_aliases()
-from builtins import object
-import xml.dom.minidom as xdm
+import defusedxml.minidom as xdm
 import logging
 import urllib.request, urllib.parse, urllib.error
 
@@ -17,7 +19,7 @@ import ta_util2.log_files as log_files
 _LOGGER = logging.getLogger(log_files.ta_util_conf)
 
 
-class CredentialManager(object):
+class CredentialManager:
     """
     Credential related interfaces
     """

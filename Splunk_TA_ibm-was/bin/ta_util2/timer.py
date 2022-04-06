@@ -1,8 +1,12 @@
-from builtins import object
+#
+# SPDX-FileCopyrightText: 2021 Splunk, Inc. <sales@splunk.com>
+# SPDX-License-Identifier: LicenseRef-Splunk-8-2021
+#
+#
 import threading
 
 
-class Timer(object):
+class Timer:
     """
     Timer wraps the callback and timestamp related stuff
     """

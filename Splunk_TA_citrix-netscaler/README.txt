@@ -1,4 +1,4 @@
 Splunk Add-on for Citrix NetScaler
 Copyright (C) 2021 Splunk Inc. All Rights Reserved.
 
-For documentation, see: http://docs.splunk.com/Documentation/AddOns/latest/CitrixNetScaler
+For documentation, see: https://docs.splunk.com/Documentation/AddOns/latest/CitrixNetScaler

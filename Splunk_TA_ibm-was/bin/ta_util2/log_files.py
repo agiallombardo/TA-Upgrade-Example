@@ -1,3 +1,8 @@
+#
+# SPDX-FileCopyrightText: 2021 Splunk, Inc. <sales@splunk.com>
+# SPDX-License-Identifier: LicenseRef-Splunk-8-2021
+#
+#
 ta_util = "ta_util"
 ta_util_conf = "ta_util_conf"
 ta_util_rest = "ta_util_rest"

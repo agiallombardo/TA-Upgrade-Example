@@ -1,3 +1,8 @@
+#
+# SPDX-FileCopyrightText: 2021 Splunk, Inc. <sales@splunk.com>
+# SPDX-License-Identifier: LicenseRef-Splunk-8-2021
+#
+#
 import ta_util2.utils as utils
 import ta_util2.log_files as log_files
 

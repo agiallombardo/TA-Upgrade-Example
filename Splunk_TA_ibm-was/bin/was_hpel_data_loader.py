@@ -1,5 +1,8 @@
-from __future__ import division
-from builtins import object
+#
+# SPDX-FileCopyrightText: 2021 Splunk, Inc. <sales@splunk.com>
+# SPDX-License-Identifier: LicenseRef-Splunk-8-2021
+#
+#
 import os.path as op
 import re
 import threading
@@ -40,7 +43,7 @@ def to_modinput_string(host, index, source, sourcetype, data):
     return "<stream>{}</stream>".format("".join(events))
 
 
-class HpelDataLoader(object):
+class HpelDataLoader:
 
     def __init__(self, config):
         """
@@ -82,6 +85,7 @@ class HpelDataLoader(object):
         for server, instances_info in self._instance_cmds.items():
             for instance_info in instances_info:
                 self._set_start_stop_date(server, instance_info)
+                
                 output = self._do_collect(instance_info[0])
                 if output:
                     self._index_data(server, instance_info, output)
@@ -91,6 +95,7 @@ class HpelDataLoader(object):
         _LOGGER.info("Start %s", log_viewer)
         output = timed_popen(log_viewer, self._config[c.duration] + 10,
                              op.dirname(log_viewer[0]))
+
         if output[-1]:
             # timedout
             _LOGGER.error("%s timedout", log_viewer)
@@ -156,7 +161,9 @@ class HpelDataLoader(object):
     def _get_instance_cmds(self):
         instances_info = self._get_instances_info()
         if not instances_info:
-            _LOGGER.info("HPEL log is not turned on for %s", self._profile)
+            _LOGGER.info("HPEL log is not turned on for server \"%s\" of profile \"%s\""
+            " or there are no HPEL repositories present in the server's log directory.",
+            self._config[c.server], self._profile)
             return {}
 
         instance_cmds = {}
@@ -198,6 +205,8 @@ class HpelDataLoader(object):
         cmd.append(stop_date)
         cmd.append("-instance")
         cmd.append(instance_id)
+        cmd.append("-repositoryDir")
+        cmd.append(self._config[c.repository_dir])
 
         return cmd
 
@@ -210,7 +219,7 @@ class HpelDataLoader(object):
         }
         """
 
-        log_viewer = [self._config[c.log_viewer], "-listInstances"]
+        log_viewer = [self._config[c.log_viewer], "-listInstances", "-repositoryDir", self._config[c.repository_dir]]
         output = timed_popen(log_viewer, self._config[c.duration] + 10,
                              op.dirname(log_viewer[0]))
         if output[-1]:
@@ -227,21 +236,16 @@ class HpelDataLoader(object):
     def _extract_instance_info(self, output):
         # Extract the server and instance ids
         server_instances = {}
-        current_server, state = None, "start"
+        current_server = self._config[c.server]
+        server_instances[current_server] = []
+        state =  "server"
         server_p = re.compile(r"Using\s*.+[\\|/]+(.+)\s*as\s*repository")
         instance_id_p = re.compile(r"Instance\s*ID")
         instance_p = re.compile(r"^(\d+)\s*\d+/\d+/\d+")
         
         output=output.decode('utf-8')
         for lin in output.split("\n"):
-            if state == "start":
-                m = re.search(server_p, lin)
-                if m:
-                    current_server = m.group(1).strip()
-                    if current_server not in server_instances:
-                        server_instances[current_server] = []
-                    state = "server"
-            elif state == "server":
+            if state == "server":
                 m = re.search(instance_id_p, lin)
                 if m:
                     state = "instance_start"

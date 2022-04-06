@@ -1,13 +1,14 @@
 #
 # SPDX-FileCopyrightText: 2021 Splunk, Inc. <sales@splunk.com>
-# SPDX-License-Identifier: LicenseRef-Splunk-1-2020
+# SPDX-License-Identifier: LicenseRef-Splunk-8-2021
 #
 #
 import logging
 import logging.handlers as handlers
-import os.path as op
 import os
+import os.path as op
 import time
+
 try:
     from splunk.clilib.bundle_paths import make_splunkhome_path
 except ImportError:
@@ -15,12 +16,14 @@ except ImportError:
 
 logging.Formatter.converter = time.gmtime
 
-__LOG_FORMAT__ = "%(asctime)s +0000 log_level=%(levelname)s, pid=%(process)d, " \
-                 "tid=%(threadName)s, file=%(filename)s, " \
-                 "func_name=%(funcName)s, code_line_no=%(lineno)d | %(message)s"
+__LOG_FORMAT__ = (
+    "%(asctime)s +0000 log_level=%(levelname)s, pid=%(process)d, "
+    "tid=%(threadName)s, file=%(filename)s, "
+    "func_name=%(funcName)s, code_line_no=%(lineno)d | %(message)s"
+)
+
 
 class Log(object):
-
     def __init__(self, namespace=None, default_level=logging.INFO):
         self._loggers = {}
         self._default_level = default_level
@@ -31,8 +34,7 @@ class Log(object):
             namespace = namespace.lower()
         self._namespace = namespace
 
-    def get_logger(self, name, level=None,
-                   maxBytes=25000000, backupCount=5):
+    def get_logger(self, name, level=None, maxBytes=25000000, backupCount=5):
         """
         Set up a default logger.
 
@@ -54,11 +56,13 @@ class Log(object):
 
         logfile = make_splunkhome_path(["var", "log", "splunk", name])
         handler_exists = any(
-            [True for h in logger.handlers if h.baseFilename == logfile])
+            [True for h in logger.handlers if h.baseFilename == logfile]
+        )
         if not handler_exists:
             file_handler = handlers.RotatingFileHandler(
-                logfile, mode="a", maxBytes=maxBytes, backupCount=backupCount)
-            formatter = logging.Formatter(__LOG_FORMAT__ )
+                logfile, mode="a", maxBytes=maxBytes, backupCount=backupCount
+            )
+            formatter = logging.Formatter(__LOG_FORMAT__)
             file_handler.setFormatter(formatter)
             logger.addHandler(file_handler)
             logger.setLevel(level)
@@ -93,7 +97,7 @@ class Log(object):
         if self._namespace:
             name = "{}_{}.log".format(self._namespace, name)
         else:
-            name = "{}.log" .format(name)
+            name = "{}.log".format(name)
         return name
 
     def _get_appname_from_path(self, absolute_path):
@@ -101,16 +105,16 @@ class Log(object):
         parts = absolute_path.split(os.path.sep)
         parts.reverse()
         for key in ("apps", "slave-apps", "master-apps"):
-            try:
+            try:  # nosemgrep: gitlab.bandit.B112
                 idx = parts.index(key)
             except ValueError:
                 continue
             else:
-                try:
+                try:  # nosemgrep: gitlab.bandit.B110
                     if parts[idx + 1] == "etc":
                         return parts[idx - 1]
                 except IndexError:
                     pass
                 continue
-        #return None
+        # return None
         return "-"

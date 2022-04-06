@@ -1,3 +1,8 @@
+#
+# SPDX-FileCopyrightText: 2021 Splunk, Inc. <sales@splunk.com>
+# SPDX-License-Identifier: LicenseRef-Splunk-8-2021
+#
+#
 from datetime import datetime, timedelta
 import os.path as op
 import copy
@@ -29,10 +34,6 @@ def get_was_configs():
 
 def _get_hpel_config(was_config):
     hpel_stanza = c.was_hpel_settings
-    if not utils.is_true(was_config[hpel_stanza][c.hpel_collection_enabled]):
-        _LOGGER.info("HPEL data collection is disabled")
-        return
-
     was_config[hpel_stanza].update(was_config[c.meta])
     was_config[hpel_stanza].update(was_config[c.was_global_settings])
     duration = int(was_config[hpel_stanza].get(c.duration, 60))
@@ -86,7 +87,9 @@ def get_hpel_tasks(was_config):
     configs = []
     for cmd in cmds:
         config = copy.deepcopy(was_config[hpel_stanza])
-        config[c.log_viewer] = cmd
+        config[c.log_viewer] = cmd[0]
+        config[c.repository_dir] = cmd[1]
+        config[c.server] = cmd[2]
         configs.append(config)
     return configs
 

@@ -1,12 +1,9 @@
 #
-# SPDX-FileCopyrightText: 2020 Splunk, Inc. <sales@splunk.com>
+# SPDX-FileCopyrightText: 2021 Splunk, Inc. <sales@splunk.com>
 # SPDX-License-Identifier: LicenseRef-Splunk-1-2020
 #
 #
-from future import standard_library
-standard_library.install_aliases()
-from builtins import range
-from builtins import object
+
 import traceback
 import logging
 import threading
@@ -66,7 +63,7 @@ def _convert_to_modinput_format(content, resource_name,
     return "".join(results)
 
 
-class CitrixNetscaler(object):
+class CitrixNetscaler:
 
     def __init__(self, config):
         """

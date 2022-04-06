@@ -1,11 +1,14 @@
-from __future__ import print_function
+#
+# SPDX-FileCopyrightText: 2021 Splunk, Inc. <sales@splunk.com>
+# SPDX-License-Identifier: LicenseRef-Splunk-8-2021
+#
+#
 import import_declare_test
-from future import standard_library
-standard_library.install_aliases()
 import sys
 import os.path as op
 import queue
 import time
+import re
 
 import ta_util2.utils as utils
 import ta_util2.log_files as log_files
@@ -22,43 +25,9 @@ import ta_util2.data_loader as dl
 import ta_util2.event_writer as event_writer
 import ta_util2.configure as conf
 import ta_util2.state_store as ss
-import was_inputs_gen as gen
 import was_hpel_job_factory as jf
 import was_config as wc
-
-
-def generate_was_inputs(was_config):
-    fm_stanza = c.was_file_monitor_settings
-    if not utils.is_true(was_config[fm_stanza][c.was_file_monitor_enabled]):
-        return
-
-    was_config[fm_stanza].update(was_config[c.meta])
-    was_config[fm_stanza].update(was_config[c.was_global_settings])
-
-    was_dir = op.dirname(op.dirname(op.abspath(__file__)))
-    was_conf = op.join(was_dir, "local", c.was_conf_file)
-
-    try:
-        conf_mtime = op.getmtime(was_conf)
-    except OSError:
-        return
-
-    appname = utils.get_appname_from_path(op.abspath(__file__))
-    store = ss.StateStore(was_config[c.meta], appname)
-    res = store.get_state(c.was_fm_ck)
-    if res and res["last_mtime"] == conf_mtime:
-        return
-
-    _LOGGER.info("Detect %s changed", was_conf)
-    _LOGGER.info("Start generating inputs.conf.")
-    gen.generate_was_inputs(was_config[fm_stanza])
-
-    # commit this generation
-    ck = {"last_mtime": conf_mtime, "version": 1}
-    store.update_state(c.was_fm_ck, ck)
-
-    # FIXME, _reload for inputs.conf
-    _LOGGER.info("End of generating inputs.conf.")
+import was_consts as c
 
 
 def _setup_signal_handler(data_loader):
@@ -127,15 +96,82 @@ def collect_hpel_log(was_config):
     _setup_signal_handler(data_loader)
     data_loader.run()
 
+def validate_configs(was_configs):
+    """
+
+    """
+
+    if was_configs.get(c.was_global_settings):
+        was_global_settings = was_configs[c.was_global_settings]
+
+        # validate index
+        if not was_global_settings.get(c.index):
+            _LOGGER.error("Index not set for the data  collection. Please set an index.")
+        elif len(was_global_settings[c.index]) > 80:
+            _LOGGER.error("Length of index name should be less than or equal to 80 characters")
+
+        # validate log_level
+        if not was_global_settings.get(c.log_level):
+            _LOGGER.info("Log level for the add-on's logs not set. Using default log level.")
+        elif was_global_settings[c.log_level].upper() not in ("DEBUG", "INFO", "ERROR"):
+            _LOGGER.error('Invalid log level specified for add-on\'s logs. Use "DEBUG", "INFO" or "ERROR".')
+
+        # validate was_install_dir
+        if not was_global_settings.get(c.was_install_dir):
+            _LOGGER.error("WAS installation directory path not set for the data collection. Please set it to start collecting HPEL logs.")
+        else:
+            if len(was_global_settings.get(c.was_install_dir, "")) > 4096:
+                _LOGGER.error("WAS installation directory path length should be less than or equal to 4096 characters")
+    
+    else:
+        # global settings have not been configured
+        _LOGGER.error("Global settings not configured for the add-on.")
+    
+    if was_configs.get(c.was_hpel_settings):
+        was_hpel_settings = was_configs[c.was_hpel_settings]
+
+        # validate excluded_profiles
+        if was_hpel_settings.get(c.excluded_profiles):
+            if len(was_hpel_settings[c.excluded_profiles]) > 4096:
+                _LOGGER.error("length of Excluded Profiles field should be less than or equal to 4096 characters")
+
+        # validate excluded_servers
+        if was_hpel_settings.get(c.excluded_servers):
+            if len(was_hpel_settings[c.excluded_servers]) > 4096:
+                _LOGGER.error("length of Excluded Servers field should be less than or equal to 4096 characters")
+            if not re.match("^([^,:\s]+:[^,:\s]+)(,[^,:\s]+:[^,:\s]+)*$", was_hpel_settings[c.excluded_servers]):
+                _LOGGER.error("Invalid format for Excluded Servers. It should be in \"ProfileA:Server3,ProfileB:Server2\" format.")
+
+        # validate duration
+        if not was_hpel_settings.get(c.duration):
+            _LOGGER.debug("Duration for the HPEL log collection not set. Using default value as 60.")
+        else:
+            if not re.match("^\d+$", was_hpel_settings[c.duration]):
+                _LOGGER.error("Duration field for HPEL data collection should be an integer."\
+                " Invalid value \"{}\" found.".format(was_hpel_settings[c.duration]))
+    
+    else:
+        _LOGGER.error("HPEL settings not configured for the add-on.")
+    
+
 
 def run():
     was_config, stanzas = wc.get_was_configs()
     log_level = was_config[c.was_global_settings].get(c.log_level, "INFO")
     _setup_logging(log_level, True)
-    generate_was_inputs(was_config)
 
     if not stanzas:
         return
+
+    if was_config.get(c.was_hpel_settings):
+        if was_config[c.was_hpel_settings].get(c.hpel_collection_enabled):
+            _LOGGER.warn("The deprecated \"hpel_collection_enabled\" parameter is being used."\
+                "Please remove this parameter and use the \"disabled\" property under"\
+                "ibm_was://was_data_input stanza to toggle data collection.")
+            if not utils.is_true(was_config[c.was_hpel_settings][c.hpel_collection_enabled]):
+                return
+    
+    validate_configs(was_config)
     collect_hpel_log(was_config)
 
 

@@ -2,6 +2,7 @@
 # SPDX-FileCopyrightText: 2021 Splunk, Inc. <sales@splunk.com>
 # SPDX-License-Identifier: Apache-2.0
 
+# jscpd:ignore-start
 . `dirname $0`/common.sh
 
 HEADER='Name       MAC                inetAddr         inet6Addr                                  Collisions  RXbytes          RXerrors         TXbytes          TXerrors         Speed        Duplex'
@@ -16,7 +17,7 @@ if [ "x$KERNEL" = "xLinux" ] ; then
 	queryHaveCommand ethtool
 	FOUND_ETHTOOL=$?
 	if [ $FOUND_IP -eq 0 ]; then
-		CMD_LIST_INTERFACES="eval ip -s a | tee $TEE_DEST|grep 'state UP' | grep mtu | grep -Ev lo | tee -a $TEE_DEST | cut -d':' -f2 | tee -a $TEE_DEST | cut -d '@' -f 1 | tee -a $TEE_DEST | sort -u | tee -a $TEE_DEST"		
+		CMD_LIST_INTERFACES="eval ip -s a | tee $TEE_DEST|grep 'state UP' | grep mtu | grep -Ev lo | tee -a $TEE_DEST | cut -d':' -f2 | tee -a $TEE_DEST | cut -d '@' -f 1 | tee -a $TEE_DEST | sort -u | tee -a $TEE_DEST"
 		CMD='eval ip addr show $iface; ip -s link show'
 		GET_IPv4='{if ($0 ~ /inet /) {split($2, a, " "); IPv4 = a[1]}}'
 		GET_IPv6='{if ($0 ~ /inet6 /) { IPv6 = $2 }}'
@@ -70,7 +71,7 @@ if [ "x$KERNEL" = "xLinux" ] ; then
 			assertHaveCommand dmesg
 			# Get Duplex only if still null
 			if [ "$DUPLEX" = "" ] ; then
-				DUPLEX=`dmesg | awk '/[Ll]ink( is | )[Uu]p/ && /'$iface'/ {for (i=1; i<=NF; ++i) {if (match($i, /([\-\_a-zA-Z0-9]+)([Dd]uplex)/)) {print $i} else { if (match($i, /[Dd]uplex/)) {print $(i-1)       } } } }' | sed 's/[-_]//g; $!d'`
+				DUPLEX=`dmesg | awk '/[Ll]ink( is | )[Uu]p/ && /'$iface'/ {for (i=1; i<=NF; ++i) {if (match($i, /([-_a-zA-Z0-9]+)([Dd]uplex)/)) {print $i} else { if (match($i, /[Dd]uplex/)) {print $(i-1)       } } } }' | sed 's/[-_]//g; $!d'`
 			fi
 			# Get Speed only if still null
 			if [ "$SPEED" = "" ] ; then
@@ -97,8 +98,8 @@ elif [ "x$KERNEL" = "xSunOS" ] ; then
 	assertHaveCommand kstat
 
 	CMD_LIST_INTERFACES="eval /usr/sbin/ifconfig -au | tee $TEE_DEST | egrep -v 'LOOPBACK|netmask' | tee -a $TEE_DEST | grep flags | cut -d':' -f1 | tee -a $TEE_DEST | sort -u | tee -a $TEE_DEST"
-	if [ SOLARIS_8 = false ] && [ SOLARIS_9 = false] ; then
-		GET_COLLISIONS_RXbytes_TXbytes_SPEED_DUPLEX='($1=="collisions") {collisions=$2} (/duplex/) {duplex=$2} ($1=="rbytes") {RXbytes=$2} ($1=="obytes") {TXbytes=$2} (/ierrors/) {RXerrors=$2} (/oerrors/) {TXerrors=$2} ($1=="ifspeed") {speed=$2; speed/=1000000; speed=speed "Mb/s"}' 
+	if [ SOLARIS_8 = false ] && [ SOLARIS_9 = false ] ; then
+		GET_COLLISIONS_RXbytes_TXbytes_SPEED_DUPLEX='($1=="collisions") {collisions=$2} (/duplex/) {duplex=$2} ($1=="rbytes") {RXbytes=$2} ($1=="obytes") {TXbytes=$2} (/ierrors/) {RXerrors=$2} (/oerrors/) {TXerrors=$2} ($1=="ifspeed") {speed=$2; speed/=1000000; speed=speed "Mb/s"}'
 	else
 		GET_COLLISIONS_RXbytes_TXbytes_SPEED_DUPLEX='($1=="collisions") {collisions=$2} ($1=="duplex") {duplex=$2} ($1=="rbytes") {RXbytes=$2} ($1=="obytes") {TXbytes=$2} ($1=="ierrors") {RXerrors=$2} ($1=="oerrors") {TXerrors=$2} ($1=="ifspeed") {speed=$2; speed/=1000000; speed=speed "Mb/s"}'
 	fi
@@ -115,7 +116,7 @@ elif [ "x$KERNEL" = "xSunOS" ] ; then
 	do
 		echo "Cmd = [$CMD_LIST_INTERFACES]" >> $TEE_DEST
 		NODE=`uname -n`
-		if [ SOLARIS_8 = false ] && [ SOLARIS_9 = false] ; then
+		if [ SOLARIS_8 = false ] && [ SOLARIS_9 = false ] ; then
 			CMD_DESCRIBE_INTERFACE="eval kstat -c net -n $iface ; /usr/sbin/ifconfig $iface 2>/dev/null"
 		else
 			CMD_DESCRIBE_INTERFACE="eval kstat -n $iface ; /usr/sbin/ifconfig $iface 2>/dev/null"
@@ -169,7 +170,7 @@ elif [ "x$KERNEL" = "xDarwin" ] ; then
 	do
 		echo "Cmd = [$CMD_LIST_INTERFACES];  | awk '$CHOOSE_ACTIVE' | $UNIQUE" >> $TEE_DEST
 		CMD_DESCRIBE_INTERFACE="eval ifconfig $iface ; netstat -b -I $iface"
-		$CMD_DESCRIBE_INTERFACE | tee -a $TEE_DEST | awk "$GET_ALL $PRINTF" name=$iface 
+		$CMD_DESCRIBE_INTERFACE | tee -a $TEE_DEST | awk "$GET_ALL $PRINTF" name=$iface
 		echo "Cmd = [$CMD_DESCRIBE_INTERFACE];     | awk '$GET_ALL $PRINTF' name=$iface" >> $TEE_DEST
 	done
 elif [ "x$KERNEL" = "xHP-UX" ] ; then
@@ -213,7 +214,8 @@ elif [ "x$KERNEL" = "xFreeBSD" ] ; then
 	do
 		echo "Cmd = [$CMD_LIST_INTERFACES];  | awk '$CHOOSE_ACTIVE' | $UNIQUE" >> $TEE_DEST
 		CMD_DESCRIBE_INTERFACE="eval ifconfig $iface ; netstat -b -I $iface"
-		$CMD_DESCRIBE_INTERFACE | tee -a $TEE_DEST | awk "$GET_ALL $PRINTF" name=$iface 
+		$CMD_DESCRIBE_INTERFACE | tee -a $TEE_DEST | awk "$GET_ALL $PRINTF" name=$iface
 		echo "Cmd = [$CMD_DESCRIBE_INTERFACE];     | awk '$GET_ALL $PRINTF' name=$iface" >> $TEE_DEST
 	done
 fi
+# jscpd:ignore-end

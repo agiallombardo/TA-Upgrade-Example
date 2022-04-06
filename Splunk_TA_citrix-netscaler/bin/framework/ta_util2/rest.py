@@ -1,12 +1,9 @@
 ##
-## SPDX-FileCopyrightText: 2020 Splunk, Inc. <sales@splunk.com>
+## SPDX-FileCopyrightText: 2021 Splunk, Inc. <sales@splunk.com>
 ## SPDX-License-Identifier: LicenseRef-Splunk-1-2020
 ##
 ##
 
-from future import standard_library
-standard_library.install_aliases()
-from builtins import range
 import urllib.request, urllib.parse, urllib.error
 import json
 import logging

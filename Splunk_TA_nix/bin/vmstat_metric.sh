@@ -52,7 +52,7 @@ elif [ "x$KERNEL" = "xSunOS" ] ; then
 	PARSE_4='/^Total: / {processes=$2; threads=$4; loadAvg1mi=0+$(NF-2)}'
 	PARSE_5='/^CPU_COUNT/ {cpuCount=$2}'
 	# Sample output: http://opensolarisforum.org/man/man1/sar.html
-	if $SOLARIS_10 = "true" || $SOLARIS_11 = "true" ; then
+	if [ $SOLARIS_10 = "true" ] || [ $SOLARIS_11 = "true" ] ; then
 		PARSE_6='($1 ~ "atch*") {nr[NR+3]} NR in nr {pgPageIn_PS=$3;}'
 		PARSE_7='($3 ~ "ppgout*") {nr2[NR+3]} NR in nr2 {pgPageOut_PS=$3}'
 	else

@@ -12,6 +12,5 @@ Z_CLOUDS = {
 	'zscalertwo'   : 'https://admin.zscalertwo.net/',
 	'zscalerthree' : 'https://admin.zscalerthree.net/',
 	'betacloud'    : 'https://admin.zscalerbeta.net/',
-	'zscalergov'   : 'https://admin.zscalergov.net/',
 	'zscalerbeta'  : 'https://admin.zscalerbeta.net/'	
 }

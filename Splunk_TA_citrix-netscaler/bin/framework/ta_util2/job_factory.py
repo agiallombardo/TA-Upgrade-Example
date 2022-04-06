@@ -1,16 +1,15 @@
 ##
-## SPDX-FileCopyrightText: 2020 Splunk, Inc. <sales@splunk.com>
+## SPDX-FileCopyrightText: 2021 Splunk, Inc. <sales@splunk.com>
 ## SPDX-License-Identifier: LicenseRef-Splunk-1-2020
 ##
 ##
 
-from builtins import object
 import time
 
 from ta_util2.timer import Timer
 
 
-class JobFactory(object):
+class JobFactory:
 
     def __init__(self, job_source, event_writer):
         self._job_source = job_source

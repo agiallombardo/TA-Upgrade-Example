@@ -1,5 +1,12 @@
-
 []
+access = read : [ * ], write : [ admin ]
+export = system
+
+[lookups]
+access = read : [ * ], write : [ admin ]
+export = system
+
+[macros]
 access = read : [ * ], write : [ admin ]
 export = system
 

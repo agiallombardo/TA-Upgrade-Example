@@ -1,10 +1,9 @@
 ##
-## SPDX-FileCopyrightText: 2020 Splunk, Inc. <sales@splunk.com>
+## SPDX-FileCopyrightText: 2021 Splunk, Inc. <sales@splunk.com>
 ## SPDX-License-Identifier: LicenseRef-Splunk-1-2020
 ##
 ##
 
-from builtins import object
 import logging
 import ta_util2.xml_dom_parser as xdp
 import ta_util2.rest as rest
@@ -14,7 +13,7 @@ import ta_util2.log_files as log_files
 _LOGGER = logging.getLogger(log_files.ta_util_conf)
 
 
-class KnowledgeObjectManager(object):
+class KnowledgeObjectManager:
 
     def __init__(self, splunkd_uri, session_key):
         self.splunkd_uri = splunkd_uri
