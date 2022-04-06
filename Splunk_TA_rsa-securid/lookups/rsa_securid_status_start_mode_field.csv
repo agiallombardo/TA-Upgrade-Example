@@ -1,0 +1,3 @@
+vendor_action_id,vendor_action_description,status,start_mode
+16290,STOP_SERVICE,stopped,manual
+16291,START_SERVICE,started,manual

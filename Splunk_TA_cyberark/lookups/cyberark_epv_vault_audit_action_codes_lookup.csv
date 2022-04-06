@@ -7,37 +7,37 @@ code,description,alert,cim_data_model,action,change_type,extratag,vendor_object_
 5,Unauthorized Station,Yes,Authentication,failure,,,,,failure
 6,External Audit,Yes,Change Analysis,read,External Audit,,User,user,success
 7,Logon,No,Authentication,success,,,,,success
-8,Logoff,No,Authentication,success,,,,,success
+8,Logoff,No,Change Analysis,modified,AAA,Account,,user,success
 9,External Audit,Yes,Change Analysis,read,External Audit,,User,user,success
 10,Update user station failed; not authorized,Yes,Change Analysis,modified,User Station,,User Station,unknown,failure
 11,Update Safe Share,Yes,Change Analysis,modified,Safe Share,,Safe Share,unknown,success
 12,Update Safe Share,Yes,Change Analysis,modified,Safe Share,,Safe Share,unknown,success
-13,Safe Access through Gateway,Yes,Change Analysis,read,Safe,,Safe,object,success
-14,Safe Access through Gateway,Yes,Change Analysis,read,Safe,,Safe,object,success
+13,Safe Access through Gateway,Yes,Change Analysis,read,Safe,,Safe,safe,success
+14,Safe Access through Gateway,Yes,Change Analysis,read,Safe,,Safe,safe,success
 15,Impersonation not by an agent,Yes,Authentication,success,,,,,success
 16,Update Your Trusted Network Areas,Yes,Change Analysis,modified,Trusted Network Area,,Trusted Network Area,unknown,success
 17,Add Safe,Yes,Change Analysis,created,Safe,,Safe,object,success
-18,Non authorized impersonation,Yes,Authentication,failure,,,,,failure
-19,Full Gateway Connection,No,Authentication,success,,,,,success
-20,Partial Gateway Connection,No,Authentication,success,,,,,success
+18,Non authorized impersonation,Yes,Authentication,failure,,,Privileged,,failure
+19,Full Gateway Connection,No,Authentication,success,,,Privileged,,success
+20,Partial Gateway Connection,No,Authentication,success,,,Privileged,,success
 21,Partial Gateway Connection,Yes,Authentication,success,,,,,success
 22,CPM Verify Password,No,Change Analysis,created,Verify,,CPM Task,unknown,success
 23,Action On Closed Safe,Yes,Change Analysis,read,Safe,,Safe,object,failure
 24,CPM Change Password,No,Change Analysis,created,Change,Account,CPM Task,unknown,success
-25,Open/Close Safe,Yes,Change Analysis,read,Safe,,Safe,object,success
-26,Open/Close Safe,Yes,Change Analysis,read,Safe,,Safe,object,success
-27,Open Safe (Unsecured Station),Yes,Change Analysis,read,Safe,,Safe,object,success
+25,Open/Close Safe,Yes,Change Analysis,read,Safe,,Safe,safe,success
+26,Open/Close Safe,Yes,Change Analysis,read,Safe,,Safe,safe,success
+27,Open Safe (Unsecured Station),Yes,Change Analysis,read,Safe,,Safe,safe,success
 28,Add/Update Owner,Yes,Change Analysis,acl_modified,Owner,,Safe,object,success
 29,Add/Update Owner,Yes,Change Analysis,acl_modified,Owner,,Safe,object,success
 30,Add/Update Owner,Yes,Change Analysis,acl_modified,Owner,,Safe,object,success
 31,CPM Reconcile Password,No,Change Analysis,created,Reconcile,Account,CPM Task,unknown,success
-32,Add Owner,No,Change Analysis,acl_modified,Owner,,Safe,object,success
-33,Update Owner,No,Change Analysis,acl_modified,Owner,,Safe,object,success
+32,Add Owner,No,Change Analysis,acl_modified,Vault,,Safe,file,success
+33,Update Owner,No,Change Analysis,acl_modified,Vault,,Safe,file,success
 34,Rename Safe,Yes,Change Analysis,modified,Safe,,Safe,object,success
 35,Rename Safe,Yes,Change Analysis,modified,Safe,,Safe,object,success
 36,Confirm Open Safe,No,Change Analysis,read,authorization,,Safe,object,success
 37,Confirm Get File,No,Change Analysis,read,authorization,,File,file,success
-38,CPM Verify Password,Yes,Change Analysis,created,Verify,Account,CPM Task,unknown,success
+38,CPM Verify Password,,Change Analysis,read,AAA,Account,CPM Task,user,success
 39,Rename Safe,No,Change Analysis,modified,Safe,,Safe,object,success
 40,List Files,Yes,Change Analysis,read,File,,File,file,success
 41,List Files,Yes,Change Analysis,read,File,,File,file,success
@@ -47,23 +47,23 @@ code,description,alert,cim_data_model,action,change_type,extratag,vendor_object_
 45,Store File,Yes,Change Analysis,created,File,,File,file,success
 46,Delete File,Yes,Change Analysis,deleted,File,,File,file,success
 47,Delete File,Yes,Change Analysis,deleted,File,,File,file,success
-48,Add Note,Yes,Change Analysis,created,Note,,Note,unknown,success
-49,Add Note,Yes,Change Analysis,created,Note,,Note,unknown,success
-50,Store File,No,Change Analysis,created,File,,File,file,success
-51,Retrieve File succeeded,No,Change Analysis,read,File,,File,file,success
-52,Delete File,No,Change Analysis,deleted,File,,File,file,success
+48,Add Note,Yes,Change Analysis,created,Note,,Note,note,success
+49,Add Note,Yes,Change Analysis,created,Note,,Note,note,success
+50,Store File,No,Endpoint,created,File,Filesystem,File,file,success
+51,Retrieve File succeeded,No,Endpoint,read,File,Filesystem,File,file,success
+52,Delete File,No,Endpoint,deleted,File,Filesystem,File,file,success
 53,Get Notes,No,Change Analysis,read,Note,,Note,unknown,success
 54,Get Notes,No,Change Analysis,read,Note,,Note,unknown,success
 55,Find Files,Yes,Change Analysis,read,File,,File,file,success
-56,Find Files,Yes,Change Analysis,read,File,,File,file,success
-57,CPM Change Password,Yes,Change Analysis,created,Change,Account,CPM Task,unknown,success
+56,Find Files,Yes,,read,File,,File,file,success
+57,CPM Change Password,,Change Analysis,modified,AAA,Account,CPM Task,user,success
 58,Clear User History,No,Change Analysis,deleted,History,,User,user,success
-59,Clear Safe History,No,Change Analysis,deleted,History,,Safe,object,success
-60,CPM Reconcile Password,Yes,Change Analysis,created,Reconcile,Account,CPM Task,unknown,success
+59,Clear Safe History,No,Change Analysis,modified,History,,Safe,safe,success
+60,CPM Reconcile Password,,Change Analysis,modified,AAA,Account,CPM Task,user,success
 61,Update Trusted Network Areas,No,Change Analysis,modified,Trusted Network Area,,User,user,success
-62,Create File Version,No,Change Analysis,created,Version,,File,file,success
+62,Create File Version,No,Endpoint,created,Version,Filesystem,File,file,success
 63,Rename User,Yes,Change Analysis,modified,User,,User,user,success
-64,Rename User,No,Change Analysis,modified,User,,User,user,success
+64,Rename User,No,Change Analysis,modified,AAA,,Account,user,success
 65,Rename User,Yes,Change Analysis,modified,User,,User,user,success
 66,Rename User,No,Change Analysis,modified,User,,User,user,success
 67,CPM Auto Detection Add Password,No,Change Analysis,created,Account,,CPM Auto Detection,unknown,success
@@ -80,14 +80,14 @@ code,description,alert,cim_data_model,action,change_type,extratag,vendor_object_
 78,Rename/Move Location,Yes,Change Analysis,modified,Location,,Location,directory ,success
 79,Rename/Move Location,No,Change Analysis,modified,Location,,Location,directory ,success
 80,Add External Group,No,Change Analysis,created,External Group,,Group,group,success
-81,Update Address,No,Change Analysis,modified,Address,,Address,unknown,success
+81,Update Address,No,Change Analysis,modified,Address,,Address,user,success
 82,Clear User History,Yes,Change Analysis,deleted,History,,User,user,success
-83,Clear User History,No,Change Analysis,deleted,History,,User,user,success
+83,Clear User History,No,Change Analysis,cleared,History,,User,user,success
 84,CPM Auto Detection Update Password,No,Change Analysis,modified,Account,,CPM Auto Detection,unknown,success
 85,Update Network Area,Yes,Change Analysis,modified,Network Area,,Network Area,unknown,success
 86,Update Network Area,No,Change Analysis,modified,Network Area,,Network Area,unknown,success
 87,Update Address,Yes,Change Analysis,modified,Address,,Address,unknown,success
-88,Set Password,No,Change Analysis,modified,Password,,User,user,success
+88,Set Password,No,Change Analysis,modified,AAA,,User,user,success
 89,Set Password,Yes,Change Analysis,modified,Password,,User,user,success
 90,Rename Network Area,Yes,Change Analysis,modified,Network Area,,Network Area,unknown,success
 91,Rename Network Area,No,Change Analysis,modified,Network Area,,Network Area,unknown,success
@@ -97,14 +97,14 @@ code,description,alert,cim_data_model,action,change_type,extratag,vendor_object_
 95,Restore Safe,No,Change Analysis,modified,Safe,,Safe,object,success
 96,Backup Safe,Yes,Change Analysis,read,Safe,,Safe,object,success
 97,Backup Safe,Yes,Change Analysis,read,Safe,,Safe,object,success
-98,Open File (Write Only),No,Change Analysis,read,File,,File,file,success
-99,Open File,No,Change Analysis,read,File,,File,file,success
+98,Open File (Write Only),No,Endpoint,modified,File,Filesystem,File,file,success
+99,Open File,No,Endpoint,read,File,Filesystem,File,file,success
 100,Open File,Yes,Change Analysis,read,File,,File,file,success
 101,Open File,Yes,Change Analysis,read,File,,File,file,success
-102,User Time Limit Restriction,Yes,Change Analysis,read,User,,User,user,failure
-103,User Has Expired,Yes,Change Analysis,read,User,,User,user,failure
-104,User Is Disabled,Yes,Change Analysis,read,User,,User,user,failure
-105,Add File Category,No,Change Analysis,created,File Category,,File,file,success
+102,User Time Limit Restriction,,Authentication,read,User,,User,user,failure
+103,User Has Expired,Yes,Authentication,failure,User,,User,user,failure
+104,User Is Disabled,Yes,Authentication,failure,User,,User,user,failure
+105,Add File Category,No,Change Analysis,modified,File Category,,File,file,success
 106,Update File Category,No,Change Analysis,modified,File Category,,File,file,success
 107,Delete File Category,No,Change Analysis,deleted,File Category,,File,file,success
 108,Open Safe Request,No,Change Analysis,read,authorization,,Safe,object,success
@@ -121,15 +121,15 @@ code,description,alert,cim_data_model,action,change_type,extratag,vendor_object_
 119,Reject Get File Request,No,Change Analysis,read,authorization,,File,file,success
 120,Add automatic location,No,Change Analysis,created,Location,,Location,directory ,success
 121,Move File,No,Change Analysis,modified,File,,File,file,success
-122,Undelete File,No,Change Analysis,modified,File,,File,file,success
+122,Undelete File,No,Endpoint,created,File,Filesystem,File,file,success
 123,Move File (Cont.),No,Change Analysis,modified,File,,File,file,success
 124,Rename File,No,Change Analysis,modified,File,,File,file,success
-125,Rename File (Cont.),No,Change Analysis,modified,File,,File,file,success
+125,Rename File (Cont.),No,Endpoint,modified,File,Filesystem,File,file,success
 126,Unlock File,No,Change Analysis,modified,File,,File,file,success
 127,Hide Open Safe Request,No,Change Analysis,modified,authorization,,Safe,object,success
 128,Hide Get File Request,No,Change Analysis,modified,authorization,,File,file,success
 129,CPM Auto Detection Archive Password,No,Change Analysis,deleted,Account,,CPM Auto Detection,unknown,success
-130,CPM Disable Password,Yes,Change Analysis,created,Disable,Account,CPM Task,unknown,success
+130,CPM Disable Password,,Change Analysis,modified,AAA,Account,CPM Task,user,success
 131,Update Safe (More Secured Than Station),Yes,Change Analysis,modified,Safe,,Safe,object,success
 132,Add Safe Event,No,Change Analysis,created,Safe Event,,Safe Event,unknown,success
 133,Add Safe Event,No,Change Analysis,created,Safe Event,,Safe Event,unknown,success
@@ -141,14 +141,14 @@ code,description,alert,cim_data_model,action,change_type,extratag,vendor_object_
 139,Move Folder,No,Change Analysis,modified,Folder,,Folder,directory,success
 140,Rename Folder (Cont.),No,Change Analysis,modified,Folder,,Folder,directory,success
 141,Move Folder (Cont.),No,Change Analysis,modified,Folder,,Folder,directory,success
-142,Delete Safe,Yes,Change Analysis,deleted,Safe,,Safe,object,success
+142,Delete Safe,,Change Analysis,deleted,Safe,,Safe,file,success
 143,Store Picture,No,Change Analysis,modified,Picture,,User,user,success
 144,Delete Picture,No,Change Analysis,modified,Picture,,User,user,success
 145,Delete Safe,Yes,Change Analysis,deleted,Safe,,Safe,object,success
 146,Update Safe,Yes,Change Analysis,modified,Safe,,Safe,object,success
 147,Update Safe,Yes,Change Analysis,modified,Safe,,Safe,object,success
-148,Delete Safe,Yes,Change Analysis,deleted,Safe,,Safe,object,success
-149,Delete Safe,Yes,Change Analysis,deleted,Safe,,Safe,object,success
+148,Delete Safe,,Change Analysis,deleted,Safe,,Safe,file,success
+149,Delete Safe,,Change Analysis,deleted,Safe,,Safe,file,success
 150,Restore Safe,Yes,Change Analysis,modified,Safe,,Safe,object,success
 152,Add Folder,Yes,Change Analysis,created,Folder,,Folder,directory,success
 153,Add Folder,Yes,Change Analysis,created,Folder,,Folder,directory,success
@@ -168,7 +168,7 @@ code,description,alert,cim_data_model,action,change_type,extratag,vendor_object_
 167,Unlock File,Yes,Change Analysis,modified,File,,File,file,success
 168,Clear Expired History,Yes,Change Analysis,deleted,History,,History,unknown,success
 169,Clear Expired History,Yes,Change Analysis,deleted,History,,History,unknown,success
-170,Delete Safe (Has Unexpired Files),Yes,Change Analysis,deleted,Safe,,Safe,object,failure
+170,Delete Safe (Has Unexpired Files),,Change Analysis,deleted,Safe,,Safe,file,failure
 171,Update Picture,Yes,Change Analysis,modified,Picture,,User,user,success
 172,Update Your Picture,Yes,Change Analysis,modified,Picture,,User,user,success
 173,Add User,Yes,Change Analysis,created,User,,User,user,success
@@ -176,16 +176,16 @@ code,description,alert,cim_data_model,action,change_type,extratag,vendor_object_
 175,Update Your User,Yes,Change Analysis,modified,User,,User,user,success
 176,Delete User,Yes,Change Analysis,deleted,User,,User,user,success
 177,Delete Your User,Yes,Change Analysis,deleted,User,,User,user,success
-178,Get User's Details,Yes,Change Analysis,read,User,,User,user,success
+178,Get User's Details,,Change Analysis,read,AAA,,Account,user,success
 179,Get Your User's Details,Yes,Change Analysis,read,User,,User,user,success
-180,Add User,No,Change Analysis,created,User,,User,user,success
-181,Update Safe,No,Change Analysis,modified,Safe,,Safe,object,success
-182,Update User,No,Change Analysis,modified,User,,User,user,success
-183,Delete Safe,No,Change Analysis,deleted,Safe,,Safe,object,success
-184,Delete User,No,Change Analysis,deleted,User,,User,user,success
-185,Add Safe,No,Change Analysis,created,Safe,,Safe,object,success
+180,Add User,No,Change Analysis,created,AAA,,Account,user,success
+181,Update Safe,No,Change Analysis,modified,Safe,,Safe,file,success
+182,Update User,No,Change Analysis,modified,AAA,,Account,user,success
+183,Delete Safe,No,Change Analysis,deleted,Safe,,Safe,file,success
+184,Delete User,No,Change Analysis,deleted,AAA,,Account,user,success
+185,Add Safe,No,Change Analysis,created,Safe,,Safe,file,success
 186,Get UserDetails By Identifier,Yes,Change Analysis,read,User,,User,user,success
-187,Add Folder,No,Change Analysis,created,Folder,,Folder,directory,success
+187,Add Folder,No,Endpoint,created,Folder,Filesystem,Folder,directory,success
 188,Delete Folder,No,Change Analysis,deleted,Folder,,Folder,directory,success
 189,Delete Folder (Has Unexpired Files),Yes,Change Analysis,deleted,Folder,,Folder,directory,failure
 190,Lock As Draft,No,Change Analysis,modified,File,,File,file,success
@@ -200,15 +200,15 @@ code,description,alert,cim_data_model,action,change_type,extratag,vendor_object_
 199,Object content invalidated,No,Change Analysis,modified,File,,File,file,success
 200,Monitoring old backup files,No,Change Analysis,read,File,,File,file,success
 201,Monitoring old backup files,No,Change Analysis,read,File,,File,file,success
-202,Deleting old backup files,No,Change Analysis,deleted,File,,File,file,success
-203,Deleting old backup files,No,Change Analysis,deleted,File,,File,file,success
+202,Old Backup Files Deletion Start,Yes,Change Analysis,started,deletion,,File,file,success
+203,Old Backup Files Deletion End,Yes,Change Analysis,stopped,deletion,,File,file,success
 204,Retrieve File (Wrong Key),Yes,Change Analysis,read,File,,File,file,failure
 205,Store File (Wrong Key),Yes,Change Analysis,created,File,,File,file,failure
 206,External Object Operation,Yes,Change Analysis,modified,External,,User/Group,object,success
 207,Compress Safe,Yes,Change Analysis,modified,Safe,,Safe,object,success
 208,Compress Safe,Yes,Change Analysis,modified,Safe,,Safe,object,success
 209,Compress Safe,No,Change Analysis,modified,Safe,,Safe,object,success
-211,Update User Detailed Information,No,Change Analysis,modified,User,,User,user,success
+211,Update User Detailed Information,No,Change Analysis,modified,AAA,,Account,user,success
 214,Add Directory Map LDAP Branch,Yes,Change Analysis,created,Directory Map LDAP Branch,,Directory Map LDAP Branch,directory,success
 215,Update Directory Map LDAP Branch,Yes,Change Analysis,modified,Directory Map LDAP Branch,,Directory Map LDAP Branch,directory,success
 216,Delete Directory Map LDAP Branch,Yes,Change Analysis,deleted,Directory Map LDAP Branch,,Directory Map LDAP Branch,directory,success
@@ -227,8 +227,8 @@ code,description,alert,cim_data_model,action,change_type,extratag,vendor_object_
 241,Prepare Backup Metadata,No,Change Analysis,created,File,,File,file,success
 243,Update user safe options failed,Yes,Change Analysis,modified,Safe,,Safe,object,failure
 244,Update user safe options failed,Yes,Change Analysis,modified,Safe,,Safe,object,failure
-246,LDAP Synchronization,No,Change Analysis,created,Synchronization,,LDAP,unknown,success
-247,LDAP Synchronization,No,Change Analysis,created,Synchronization,,LDAP,unknown,success
+246,LDAP Synchronization Start,No,Change Analysis,created,Synchronization,,LDAP,unknown,success
+247,LDAP Synchronization End,No,Change Analysis,created,Synchronization,,LDAP,unknown,success
 248,Add Rule,Yes,Change Analysis,created,File,,File,file,success
 249,Add Rule,Yes,Change Analysis,created,File,,File,file,success
 250,Restore metadata,Yes,Change Analysis,created,File,,File,file,success
@@ -239,21 +239,21 @@ code,description,alert,cim_data_model,action,change_type,extratag,vendor_object_
 255,Add Directory Map,Yes,Change Analysis,created,Directory Map,,Directory Map,directory,success
 256,Update External User,No,Change Analysis,modified,External User,,User,user,success
 257,Update External Group,No,Change Analysis,modified,External,,Group,group,success
-259,Add/Update Group,No,Change Analysis,modified,Group,,Group,group,success
+259,Add/Update Group,No,Change Analysis,modified,AAA,,Account,user,success
 260,Add/Update Group,Yes,Change Analysis,modified,Group,,Group,group,success
 261,Add Group Member,Yes,Change Analysis,acl_modified,Member,,Group,group,success
 262,Delete Group Member,Yes,Change Analysis,acl_modified,Member,,Group,group,success
 263,Update Group,Yes,Change Analysis,modified,Group,,Group,group,success
 264,Update Group,No,Change Analysis,modified,Group,,Group,group,success
-265,Add Group Member,No,Change Analysis,acl_modified,Member,,Group,group,success
-266,Remove Group Member,No,Change Analysis,acl_modified,Member,,Group,group,success
+265,Add Group Member,No,Change Analysis,modified,AAA,,Account,group,success
+266,Remove Group Member,No,Change Analysis,modified,AAA,,Account,group,success
 267,Reorganize database,No,Change Analysis,modified,File,,File,file,success
 268,Reorganize database,No,Change Analysis,modified,File,,File,file,success
 269,Delete Group,Yes,Change Analysis,deleted,Group,,Group,group,success
-270,Delete Group,No,Change Analysis,deleted,Group,,Group,group,success
+270,Delete Group,No,Change Analysis,deleted,AAA,,Group,group,success
 271,List Group Members,Yes,Change Analysis,read,Member,,Group,group,success
 272,Delete Folder,Yes,Change Analysis,deleted,Folder,,Folder,directory,success
-273,Remove Owner,No,Change Analysis,acl_modified,Owner,,Safe,object,success
+273,Remove Owner,No,Change Analysis,acl_modified,Owner,,Safe,file,success
 276,Delete External User,No,Change Analysis,deleted,External User,,User,user,success
 277,Delete External Group,No,Change Analysis,deleted,External,,Group,group,success
 278,Add Rule,No,Change Analysis,created,File,,File,file,success
@@ -264,26 +264,26 @@ code,description,alert,cim_data_model,action,change_type,extratag,vendor_object_
 285,Firewall Network Areas refresh,No,Change Analysis,read,Firewall Network Area,,Firewall Network Area,unknown,success
 286,Add Group Member - Sync From Ldap,No,Change Analysis,acl_modified,External,,Group,group,success
 287,Delete Group Member - Sync From Ldap,No,Change Analysis,acl_modified,External,,Group,group,success
-288,Auto Clear Users History start,No,Change Analysis,deleted,History,,User,user,success
-289,Auto Clear Users History end,No,Change Analysis,deleted,History,,User,user,success
-290,Auto Clear Safes History start,No,Change Analysis,modified,History,,Safe,object,success
-291,Auto Clear Safes History end,No,Change Analysis,modified,History,,Safe,object,success
+288,Auto Clear Users History start,Yes,Change Analysis,started,History,,User,file,success
+289,Auto Clear Users History end,Yes,Change Analysis,stopped,History,,User,file,success
+290,Auto Clear Safes History start,Yes,Change Analysis,started,History,,Safe,file,success
+291,Auto Clear Safes History end,Yes,Change Analysis,stopped,History,,Safe,file,success
 292,Auto Download Certificate Revocation List Data start,No,Change Analysis,created,File,,File,file,success
 293,Auto Download Certificate Revocation List Data end,No,Change Analysis,created,File,,File,file,success
-294,Store password,No,Change Analysis,modified,Password,,Account,unknown,success
-295,Retrieve password,No,Change Analysis,read,Password,,Account,unknown,success
+294,Store password,No,Change Analysis,modified,AAA,,Account,user,success
+295,Retrieve password,No,Change Analysis,read,AAA,,Account,user,success
 296,Open Safe,No,Change Analysis,read,Safe,,Safe,object,success
 297,Rules List,Yes,Change Analysis,read,File,,File,file,success
 298,Rules List,Yes,Change Analysis,read,File,,File,file,success
 300,PSM Connect,No,Network Sessions,added,Connection,,PSM,object,success
-301,PSM Connect Failed,Yes,Network Sessions,blocked,Connection,,PSM,object,failure
+301,PSM Connect Failed,Yes,Endpoint,blocked,,Processes,PSM,object,failure
 302,PSM Disconnect,No,Network Sessions,blocked,Connection,,PSM,object,success
 303,PSM Disconnect Failed,Yes,Network Sessions,blocked,Connection,,PSM,object,failure
 304,PSM Upload Recording,No,Change Analysis,created,Recording,,PSM,object,success
 305,Run Report,No,Change Analysis,created,File,,Report,unknown,success
 306,Use Password,Yes,Change Analysis,read,Password,,Account,unknown,success
 307,Use Password,Yes,Change Analysis,read,Password,,Account,unknown,success
-308,Use Password,No,Change Analysis,read,Password,,Account,unknown,success
+308,Use Password,No,Change Analysis,read,AAA,,Account,user,success
 309,Undefined User Logon,Yes,Authentication,success,,,,,success
 310,Monitor DR Replication start,No,Change Analysis,read,Replication,,DR,unknown,success
 311,Monitor DR Replication end,No,Change Analysis,read,Replication,,DR,unknown,success
@@ -291,8 +291,8 @@ code,description,alert,cim_data_model,action,change_type,extratag,vendor_object_
 313,Monitor Backup Replication end,No,Change Analysis,read,Replication,,Backup,unknown,success
 314,Reset Password User,Yes,Change Analysis,modified,Password,,User,user,success
 315,Reset Password Your User,Yes,Change Analysis,modified,Password,,User,user,success
-316,Reset User Password Detailed Information,No,Change Analysis,modified,Password,,User,user,success
-317,Reset User Password,No,Change Analysis,modified,Password,,User,user,success
+316,Reset User Password Detailed Information,No,Change Analysis,modified,AAA,,Account,user,success
+317,Reset User Password,No,Change Analysis,modified,AAA,,Account,user,success
 318,Activate/Deactivate Trusted Network Areas,No,Change Analysis,modified,Trusted Network Area,,User,user,success
 319,Retrieve password (From Provider),No,Change Analysis,read,Password,,Account,unknown,success
 320,Retrieve password (From Provider),Yes,Change Analysis,read,Password,,Account,unknown,success
@@ -328,8 +328,8 @@ code,description,alert,cim_data_model,action,change_type,extratag,vendor_object_
 354,Update Privileged Command,No,Change Analysis,modified,Privileged Command Definition,,OPM,unknown,success
 355,Monitor License Expiration Date start,No,Change Analysis,read,License,,License,unknown,success
 356,Monitor License Expiration Date end,No,Change Analysis,read,License,,License,unknown,success
-357,Monitor FW rules start,No,Change Analysis,read,FW Rule,,FW Rule,unknown,success
-358,Monitor FW Rules end,No,Change Analysis,read,FW Rule,,FW Rule,unknown,success
+357,Monitor FW rules start,Yes,Change Analysis,started,FW Rule,,FW Rule,rules,success
+358,Monitor FW Rules end,Yes,Change Analysis,stopped,FW Rule,,FW Rule,rules,success
 359,SQL command,No,Change Analysis,created,SQL command,,SQL command,unknown,success
 360,SQL Command audit failed,Yes,Change Analysis,created,Audit,,PSM,object,failure
 361,Keystroke logging,No,Change Analysis,created,Keystroke logging,,Keystroke logging,unknown,success
@@ -353,7 +353,7 @@ code,description,alert,cim_data_model,action,change_type,extratag,vendor_object_
 379,PSM Secure Connect Session Start Failed,Yes,Network Sessions,blocked,Session,,PSM,object,failure
 380,PSM Secure Connect Session End,No,Network Sessions,blocked,Session,,PSM,object,success
 381,PSM Secure Connect Session End Failed,Yes,Network Sessions,blocked,Session,,PSM,object,failure
-382,Add App Authentication,No,Change Analysis,created,App Authentication,,AIM,unknown,success
+382,Add App Authentication,No,Change Analysis,created,App Authentication,,AIM,,success
 383,Delete App Authentication,No,Change Analysis,deleted,App Authentication,,AIM,unknown,success
 387,Process has started with admin rights added to token,No,Change Analysis,created,Process,,OPM,unknown,success
 388,Process has been started from the shell context menu with admin rights added to token,No,Change Analysis,created,Process,,OPM,unknown,success
@@ -382,3 +382,6 @@ code,description,alert,cim_data_model,action,change_type,extratag,vendor_object_
 411,PSM Window Title,No,Change Analysis,created,Window Title,,PSM,object,success
 412,Keystroke logging,No,Change Analysis,created,Keystroke logging,,Keystroke logging,unknown,success
 413,Keystroke logging failed,Yes,Change Analysis,created,Keystroke logging,,Keystroke logging,unknown,failure
+461,Privileged Threat Analytics Event,No,Alert,,,,,,
+479,Security warning - The Signature Hash Algorithm of the Vault certificate is SHA1,No,Alert,,,,,,
+482,Update existing Add Account Bulk Operation succeeded,No,Change Analysis,modified,AAA,,,user,success

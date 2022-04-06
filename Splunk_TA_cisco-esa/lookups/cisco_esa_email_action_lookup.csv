@@ -3,6 +3,7 @@ Message done,delivered
 Bounced,blocked
 Double bounce,blocked
 Quarantined,quarantined
+Quarantine,quarantined
 Message aborted,blocked
 Delayed,deferred
 Release,delivered

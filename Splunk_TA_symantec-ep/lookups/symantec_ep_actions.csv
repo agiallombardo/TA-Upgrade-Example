@@ -1,5 +1,5 @@
 vendor_action,action
-Quarantined,blocked
+Quarantined,allowed
 Renamed,deferred
 Deleted,blocked
 Cleaned,blocked
@@ -33,3 +33,4 @@ Block,blocked
 Allow,allowed
 Moved back,deferred
 Access Denied,blocked
+Action Invalid,unknown
