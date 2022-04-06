@@ -1,6 +1,0 @@
-Change_Type,action,result
-Write,modified,success
-RenamePath,modified,success
-CreateNewFile,created,success
-DeletePath,deleted,success
-FilePermissionChange,acl_modified,success

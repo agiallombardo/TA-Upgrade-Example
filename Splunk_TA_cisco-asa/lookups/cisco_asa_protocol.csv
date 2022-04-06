@@ -1,4 +1,0 @@
-transport,protocol
-icmp,icmp
-tcp,ip
-udp,ip
