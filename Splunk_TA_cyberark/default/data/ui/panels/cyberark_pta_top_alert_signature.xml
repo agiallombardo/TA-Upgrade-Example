@@ -1,0 +1,10 @@
+<panel>
+  <title>CyberArk PTA - Top 10 Alert Signatures in Last 24H</title>
+  <table>
+	<search>
+	  <query>eventtype=cyberark_pta_alerts earliest=-24h | top signature | rename signature as "Signature", count as "Count", percent as "Percent"</query>
+	  <earliest>-24h@h</earliest>
+	  <latest>now</latest>
+	</search>
+  </table>
+</panel>
